@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT-Lernplattform – Lernfeld 2</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --white: #ffffff; --off: #f5f5f5; --light: #e8e8e8; --mid: #b0b0b0;
+  --dark: #2a2a2a; --black: #111111; --accent: #1a56e8; --accent-light: #e8eefb;
+  --correct: #177a45; --correct-bg: #eaf4ee; --wrong: #c0291a; --wrong-bg: #faecea;
+  --border: 1px solid #d4d4d4; --r: 3px;
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
+}
+html { font-size: 15px; }
+body { font-family: var(--sans); background: var(--off); color: var(--black); line-height: 1.6; }
+
+/* HEADER */
+header { background: var(--black); color: var(--white); padding: 0 2.5rem; height: 54px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.h-left { display: flex; align-items: center; gap: 1rem; }
+.h-tag { font-size: 0.68rem; font-family: var(--mono); color: #777; letter-spacing: 0.1em; text-transform: uppercase; }
+.h-sep { width: 1px; height: 18px; background: #333; }
+header h1 { font-size: 0.92rem; font-weight: 600; }
+.h-right { font-size: 0.7rem; font-family: var(--mono); color: #666; }
+
+/* NAV */
+nav { background: var(--white); border-bottom: var(--border); display: flex; overflow-x: auto; scrollbar-width: none; }
+nav::-webkit-scrollbar { display: none; }
+.tab { padding: 0 1.4rem; height: 44px; border: none; border-bottom: 2px solid transparent; background: none; font-family: var(--sans); font-size: 0.82rem; font-weight: 500; color: #666; cursor: pointer; white-space: nowrap; transition: color 0.15s, border-color 0.15s; flex-shrink: 0; }
+.tab:hover { color: var(--black); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+.container { max-width: 940px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+/* SECTION HEAD */
+.sec-head { display: flex; align-items: baseline; gap: 1rem; padding-bottom: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--black); }
+.sec-head h2 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; }
+.sec-tag { font-family: var(--mono); font-size: 0.65rem; color: #888; letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* GRIDS */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1px; background: var(--light); border: 1px solid var(--light); margin-bottom: 2rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: var(--light); border: 1px solid var(--light); margin-bottom: 2rem; }
+
+/* CARD */
+.card { background: var(--white); padding: 1.4rem; }
+.card-tag { font-size: 0.63rem; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.45rem; }
+.card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
+.card ul { list-style: none; }
+.card li { font-size: 0.82rem; padding: 0.28rem 0 0.28rem 1rem; position: relative; color: #333; border-bottom: 1px solid var(--off); }
+.card li:last-child { border-bottom: none; }
+.card li::before { content: '\2013'; position: absolute; left: 0; color: var(--mid); }
+.card strong { color: var(--black); font-weight: 600; }
+
+/* SUB TITLE */
+.sub { font-size: 0.95rem; font-weight: 700; margin: 2rem 0 0.9rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--light); letter-spacing: -0.01em; }
+
+/* CALLOUT */
+.callout { background: var(--accent-light); border-left: 3px solid var(--accent); padding: 0.9rem 1.1rem; margin-bottom: 1.5rem; font-size: 0.83rem; line-height: 1.7; color: #1a2a4a; }
+.callout strong { color: var(--accent); }
+
+/* TABLE */
+.tbl-wrap { margin-bottom: 2rem; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: var(--white); }
+thead th { background: var(--black); color: var(--white); font-size: 0.66rem; font-family: var(--mono); letter-spacing: 0.07em; text-transform: uppercase; padding: 0.6rem 0.9rem; text-align: left; font-weight: 600; }
+tbody td { padding: 0.58rem 0.9rem; border-bottom: 1px solid var(--light); color: #333; vertical-align: top; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--off); }
+.td-k { font-weight: 600; color: var(--black); white-space: nowrap; }
+.td-p { font-family: var(--mono); font-weight: 600; color: var(--correct); }
+.td-t { font-family: var(--mono); font-weight: 700; font-size: 0.92rem; color: var(--black); }
+.row-total td { background: var(--off); border-top: 2px solid var(--dark); }
+.row-sub td { background: #f9f9f9; border-top: 1px solid var(--mid); }
+
+/* ACCORDION */
+.accordion { margin-bottom: 2rem; }
+.acc-item { border: var(--border); background: var(--white); margin-bottom: -1px; }
+.acc-btn { width: 100%; padding: 0.85rem 1rem; background: none; border: none; display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-size: 0.86rem; font-weight: 600; color: var(--black); cursor: pointer; text-align: left; transition: background 0.1s; }
+.acc-btn:hover { background: var(--off); }
+.acc-icon { font-size: 1rem; color: var(--accent); transition: transform 0.25s; flex-shrink: 0; }
+.acc-item.open .acc-icon { transform: rotate(45deg); }
+.acc-body { display: none; padding: 0.9rem 1rem 1rem; font-size: 0.82rem; color: #444; line-height: 1.75; border-top: 1px solid var(--light); }
+.acc-item.open .acc-body { display: block; }
+
+/* PILLS */
+.pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.6rem; }
+.pill { display: inline-block; padding: 0.18rem 0.6rem; background: var(--off); border: 1px solid var(--mid); font-size: 0.7rem; font-family: var(--mono); color: var(--dark); border-radius: var(--r); }
+.pill-a { background: var(--accent-light); border-color: #a8c0f0; color: var(--accent); }
+
+/* HDD GEO */
+.geo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--light); border: 1px solid var(--light); margin-bottom: 2rem; }
+.geo-cell { background: var(--white); padding: 1rem 0.75rem; text-align: center; }
+.geo-n { font-family: var(--mono); font-size: 0.62rem; color: var(--mid); margin-bottom: 0.35rem; }
+.geo-name { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.35rem; }
+.geo-desc { font-size: 0.7rem; color: #666; line-height: 1.5; }
+
+/* SPEC BOX */
+.spec-box { background: var(--white); border: var(--border); margin-bottom: 2rem; overflow: hidden; }
+.spec-head { background: var(--black); color: var(--white); padding: 0.7rem 1rem; font-size: 0.78rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+.spec-meta { font-family: var(--mono); font-size: 0.63rem; color: #777; letter-spacing: 0.08em; }
+
+/* TIMELINE */
+.timeline { margin-bottom: 2rem; }
+.tl-item { display: grid; grid-template-columns: 28px 1fr; }
+.tl-left { display: flex; flex-direction: column; align-items: center; padding-top: 0.15rem; }
+.tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 0.35rem; }
+.tl-line { width: 1px; flex: 1; min-height: 1.2rem; background: var(--light); }
+.tl-item:last-child .tl-line { display: none; }
+.tl-right { background: var(--white); border: var(--border); padding: 0.85rem 1rem; margin-bottom: 0.45rem; }
+.tl-step { font-family: var(--mono); font-size: 0.63rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.2rem; }
+.tl-name { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.25rem; }
+.tl-desc { font-size: 0.79rem; color: #555; line-height: 1.6; }
+
+/* FLASHCARDS */
+.fc-wrap { max-width: 580px; }
+.fc-scene { perspective: 1200px; height: 210px; cursor: pointer; margin-bottom: 1.1rem; user-select: none; }
+.fc-card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+.fc-card.flipped { transform: rotateY(180deg); }
+.fc-face { position: absolute; inset: 0; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; padding: 1.8rem; background: var(--white); border: var(--border); }
+.fc-back { transform: rotateY(180deg); background: var(--off); border-left: 3px solid var(--accent); }
+.fc-meta { font-size: 0.63rem; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 0.6rem; }
+.fc-term { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; }
+.fc-hint { font-size: 0.7rem; color: var(--mid); margin-top: 0.7rem; }
+.fc-def { font-size: 0.85rem; color: #333; line-height: 1.7; }
+.fc-progress { display: flex; gap: 3px; margin-bottom: 0.8rem; }
+.fc-pip { height: 3px; flex: 1; background: var(--light); border-radius: 2px; cursor: pointer; transition: background 0.2s; }
+.fc-pip.active { background: var(--accent); }
+.fc-pip.done { background: var(--mid); }
+.fc-nav { display: flex; align-items: center; justify-content: space-between; }
+.fc-count { font-family: var(--mono); font-size: 0.78rem; color: #888; }
+.btn-n { padding: 0.48rem 1.1rem; border: var(--border); background: var(--white); font-family: var(--sans); font-size: 0.8rem; font-weight: 600; color: var(--black); cursor: pointer; transition: background 0.1s; border-radius: var(--r); }
+.btn-n:hover { background: var(--off); }
+
+/* QUIZ */
+.qwrap { max-width: 640px; }
+.qbar { display: flex; gap: 2px; height: 4px; margin-bottom: 1.8rem; }
+.qseg { flex: 1; background: var(--light); border-radius: 2px; }
+.qseg.done { background: var(--correct); }
+.qseg.cur { background: var(--accent); }
+.qcard { background: var(--white); border: var(--border); padding: 1.7rem; margin-bottom: 1rem; }
+.qmeta { font-family: var(--mono); font-size: 0.65rem; color: #888; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.qqtext { font-size: 1rem; font-weight: 600; line-height: 1.45; margin-bottom: 1.3rem; letter-spacing: -0.01em; }
+.qopts { display: flex; flex-direction: column; gap: 0.45rem; }
+.qopt { padding: 0.7rem 0.9rem; border: var(--border); background: var(--white); font-family: var(--sans); font-size: 0.82rem; text-align: left; cursor: pointer; display: flex; align-items: flex-start; gap: 0.7rem; transition: background 0.1s, border-color 0.1s; color: var(--black); border-radius: var(--r); line-height: 1.5; }
+.qopt:hover { background: var(--off); border-color: #bbb; }
+.qopt.correct { background: var(--correct-bg); border-color: var(--correct); color: var(--correct); }
+.qopt.wrong { background: var(--wrong-bg); border-color: var(--wrong); color: var(--wrong); }
+.qopt.disabled { cursor: default; }
+.okey { font-family: var(--mono); font-size: 0.7rem; font-weight: 600; min-width: 18px; padding-top: 0.1rem; opacity: 0.45; flex-shrink: 0; }
+.qopt.correct .okey, .qopt.wrong .okey { opacity: 1; }
+.qfb { font-size: 0.81rem; padding: 0.75rem 0.9rem; line-height: 1.65; border-radius: var(--r); margin-top: 0.55rem; display: none; }
+.qfb.show { display: block; }
+.qfb.correct { background: var(--correct-bg); color: var(--correct); border: 1px solid #b2d8c0; }
+.qfb.wrong { background: var(--wrong-bg); color: #8b1a10; border: 1px solid #e8b8b4; }
+.btn-next { margin-top: 1rem; padding: 0.6rem 1.4rem; background: var(--accent); color: var(--white); border: none; font-family: var(--sans); font-size: 0.82rem; font-weight: 600; cursor: pointer; display: none; border-radius: var(--r); transition: opacity 0.15s; }
+.btn-next:hover { opacity: 0.87; }
+.btn-next.show { display: inline-block; }
+.qresult { background: var(--white); border: var(--border); padding: 3rem 2rem; text-align: center; display: none; }
+.qresult.show { display: block; }
+.res-frac { font-size: 2.8rem; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 0.2rem; }
+.res-label { font-family: var(--mono); font-size: 0.68rem; color: #888; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.9rem; }
+.res-msg { font-size: 0.86rem; color: #444; margin-bottom: 1.4rem; }
+.btn-restart { padding: 0.6rem 1.4rem; border: 1px solid var(--dark); background: var(--white); font-family: var(--sans); font-size: 0.82rem; font-weight: 600; cursor: pointer; border-radius: var(--r); transition: background 0.1s; }
+.btn-restart:hover { background: var(--off); }
+
+/* ELEKTRIK */
+.calc-box { background: var(--white); border: var(--border); padding: 1.6rem; margin-bottom: 2rem; }
+.calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.8rem; margin-bottom: 1rem; }
+.calc-field label { font-size: 0.72rem; font-family: var(--mono); color: #666; display: block; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.calc-field input { width: 100%; padding: 0.55rem 0.7rem; border: var(--border); background: var(--off); font-family: var(--mono); font-size: 0.9rem; border-radius: var(--r); outline: none; }
+.calc-field input:focus { border-color: var(--accent); }
+.calc-result { font-size: 0.83rem; color: #555; font-family: var(--mono); min-height: 2.5rem; padding: 0.6rem 0.8rem; background: var(--off); border-radius: var(--r); border: var(--border); }
+.calc-result.has-result { color: var(--correct); }
+.btn-clear { margin-top: 0.7rem; padding: 0.4rem 1rem; border: var(--border); background: var(--white); font-family: var(--sans); font-size: 0.78rem; cursor: pointer; border-radius: var(--r); }
+.btn-clear:hover { background: var(--off); }
+.aufgabe-wrap { margin-bottom: 0.5rem; border: var(--border); background: var(--white); overflow: hidden; }
+.aufgabe-head { padding: 0.9rem 1.1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.1s; }
+.aufgabe-head:hover { background: var(--off); }
+.aufgabe-head-left { display: flex; align-items: center; gap: 0.8rem; }
+.aufgabe-nr { font-family: var(--mono); font-size: 0.63rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+.aufgabe-titel { font-size: 0.88rem; font-weight: 600; }
+.aufgabe-icon { font-size: 1rem; color: var(--accent); transition: transform 0.25s; }
+.aufgabe-body { display: none; border-top: 1px solid var(--light); }
+.aufgabe-inner { padding: 1.1rem; }
+.aufgabe-kontext { font-size: 0.82rem; color: #333; line-height: 1.7; margin-bottom: 1rem; }
+.aufgabe-info { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--light); border: 1px solid var(--light); margin-bottom: 1rem; }
+.aufgabe-info-cell { background: var(--off); padding: 0.7rem 0.9rem; }
+.aufgabe-info-label { font-size: 0.63rem; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 0.4rem; }
+.aufgabe-info-val { font-size: 0.82rem; color: #333; }
+.aufgabe-info-val span { font-family: var(--mono); font-weight: 600; color: var(--black); }
+.btn-lsg { padding: 0.5rem 1.1rem; border: 1px solid var(--accent); background: var(--white); color: var(--accent); font-family: var(--sans); font-size: 0.8rem; font-weight: 600; cursor: pointer; border-radius: var(--r); margin-bottom: 0.6rem; }
+.btn-lsg:hover { background: var(--accent-light); }
+.lsg-block { display: none; border-top: 1px solid var(--light); padding-top: 1rem; }
+.lsg-label { font-size: 0.68rem; font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 0.7rem; }
+.lsg-row { display: grid; grid-template-columns: 11rem 1fr auto; gap: 0 0.8rem; align-items: baseline; padding: 0.4rem 0; border-bottom: 1px solid var(--off); }
+.lsg-formel { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); }
+.lsg-rechnung { font-family: var(--mono); font-size: 0.78rem; color: #555; }
+.lsg-ergebnis { font-family: var(--mono); font-size: 0.82rem; font-weight: 600; color: var(--correct); white-space: nowrap; }
+.lsg-fazit { background: var(--accent-light); border-left: 3px solid var(--accent); padding: 0.7rem 0.9rem; margin-top: 0.8rem; font-size: 0.81rem; color: #1a2a4a; line-height: 1.65; }
+
+@media (max-width: 640px) {
+  header { padding: 0 1rem; }
+  .container { padding: 1.5rem 1rem; }
+  .geo-grid { grid-template-columns: repeat(2, 1fr); }
+  .sec-head h2 { font-size: 1.15rem; }
+  .lsg-row { grid-template-columns: 1fr; gap: 0.1rem; }
+  .aufgabe-info { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-left">
+    <span class="h-tag">Lernfeld 2 &middot; LS 2.3</span>
+    <div class="h-sep"></div>
+    <h1>IT-Arbeitsplatz auf Kundenwunsch</h1>
+  </div>
+  <span class="h-right">Lernfeld 2 &middot; LS 2.3</span>
+</header>
+
+<nav>
+  <button class="tab active" onclick="showTab('ram',this)">Arbeitsspeicher</button>
+  <button class="tab" onclick="showTab('gpu',this)">Grafikkarte</button>
+  <button class="tab" onclick="showTab('hdd',this)">Speichermedien</button>
+  <button class="tab" onclick="showTab('sales',this)">Verkaufsgespr&auml;ch</button>
+  <button class="tab" onclick="showTab('elektrik',this)">Elektrik U&middot;I&middot;R&middot;P</button>
+  <button class="tab" onclick="showTab('netzteil',this)">Netzteile</button>
+  <button class="tab" onclick="showTab('mainboard',this)">Mainboard &amp; CPU</button>
+  <button class="tab" onclick="showTab('fc',this)">Flashcards</button>
+  <button class="tab" onclick="showTab('quiz',this)">Quiz</button>
+</nav>
+
+<!-- ════════════════ ARBEITSSPEICHER ════════════════ -->
+<div class="page active" id="ram">
+<div class="container">
+  <div class="sec-head">
+    <h2>Arbeitsspeicher (RAM)</h2>
+    <span class="sec-tag">DDR5 &middot; DIMM &middot; Timings &middot; QVL</span>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Grundlagen</div>
+      <h3>Was ist RAM?</h3>
+      <ul>
+        <li>Fl&uuml;chtiger Kurzzeitspeicher f&uuml;r aktive Prozesse</li>
+        <li>Direkte Verbindung zur CPU &uuml;ber Memory-Controller</li>
+        <li>Verliert Daten beim Ausschalten</li>
+        <li>Typisch am Mainboard: 2&ndash;4 DIMM-Slots, je nach Formfaktor bis 128 GB</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Bauformen</div>
+      <h3>DIMM-Module</h3>
+      <ul>
+        <li><strong>DIMM</strong> = Dual Inline Memory Module (Desktop)</li>
+        <li><strong>SO-DIMM</strong> = Small Outline (Laptop)</li>
+        <li>M&ouml;gliche Gr&ouml;&szlig;en: 8 GB &middot; 16 GB &middot; 32 GB pro Riegel</li>
+        <li>Bauform l&auml;sst auf Generation schlie&szlig;en (DDR4 / DDR5)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Architektur</div>
+      <h3>Dual-Channel</h3>
+      <ul>
+        <li>Zwei parallele Kan&auml;le &rarr; h&ouml;here Speicherbandbreite</li>
+        <li>Immer identische Riegel verwenden</li>
+        <li>Bei 2 Riegeln: <strong>Slots A2 + B2</strong> belegen</li>
+        <li>Deutlicher Performance-Vorteil gegen&uuml;ber Single-Channel</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">&Uuml;bertaktung</div>
+      <h3>XMP / EXPO / OC</h3>
+      <ul>
+        <li>RAM &uuml;ber Standard-Takt betreiben</li>
+        <li><strong>AMD EXPO</strong> = Extended Profiles for Overclocking</li>
+        <li>DDR5-Standard: 4800 MHz &middot; OC bis 6400+ MHz m&ouml;glich</li>
+        <li>ASUS OptiMem II f&uuml;r verbessertes Signal-Routing</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Fehlerkorrektur</div>
+      <h3>ECC-Speicher</h3>
+      <ul>
+        <li>ECC = Error Correcting Code</li>
+        <li>Erkennt und korrigiert 1-Bit-Fehler automatisch</li>
+        <li>DDR5: On-Die ECC direkt im Modul integriert</li>
+        <li>Empfohlen f&uuml;r Workstations und Server</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Kompatibilit&auml;t</div>
+      <h3>QVL-Liste</h3>
+      <ul>
+        <li>Qualified Vendor List = Kompatibilit&auml;tsliste des Herstellers</li>
+        <li>ASUS-getestete RAM-Kits f&uuml;r das spezifische Board</li>
+        <li>Gew&auml;hlt: Galaxy HOF5, 8000 MHz, 2&times;16 GB, ~300 &euro;</li>
+        <li>Timings: 36-48-48-128</li>
+      </ul>
+    </div>
+  </div>
+  <h3 class="sub">Speicher-Timings</h3>
+  <div class="callout">
+    <strong>Beispiel: DDR4-2133 (14-14-14)</strong><br>
+    Die Zahlen 14-14-14 beschreiben Taktzyklen f&uuml;r verschiedene Operationen (u.a. CAS-Latenz).<br>
+    <strong>Niedrigeres Timing = besser</strong> &rarr; weniger Taktzyklen, geringere Latenz, schnellerer Zugriff.
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Parameter</th><th>Bedeutung</th><th>Beispielwert</th></tr></thead>
+      <tbody>
+        <tr><td class="td-k">CAS-Latenz (CL)</td><td>Taktzyklen zwischen Leseanforderung und Datenverfügbarkeit</td><td>CL14, CL36</td></tr>
+        <tr><td class="td-k">tRCD</td><td>Verzögerung beim Öffnen einer Speicherzeile</td><td>14</td></tr>
+        <tr><td class="td-k">tRP</td><td>Verzögerung beim Schließen einer Speicherzeile</td><td>14</td></tr>
+        <tr><td class="td-k">tRAS</td><td>Minimale Zeit, eine Zeile aktiv zu halten</td><td>128</td></tr>
+        <tr><td class="td-k">SPD</td><td>Chip im RAM-Modul, übermittelt Spezifikationen beim POST an das BIOS</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 class="sub">Vorgehen: RAM-Auswahl für ein gegebenes Mainboard</h3>
+  <div class="accordion">
+    <div class="acc-item">
+      <button class="acc-btn" onclick="togAcc(this)"><span>Schritt 1 — Anzahl der Sticks festlegen</span><span class="acc-icon">+</span></button>
+      <div class="acc-body">Bei 4 Slots immer paarweise bestücken (z.B. 2×16 GB statt 1×32 GB) für maximale Speicherbandbreite im Dual-Channel-Betrieb.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" onclick="togAcc(this)"><span>Schritt 2 — Kapazität anhand des Datenblatts prüfen</span><span class="acc-icon">+</span></button>
+      <div class="acc-body">Maximale Speichergr&ouml;&szlig;e aus dem Datenblatt des gew&auml;hlten Mainboards ermitteln. Abgleich mit der maximal unterst&uuml;tzten Kapazit&auml;t der CPU. Tats&auml;chlichen Bedarf der Anwendung ber&uuml;cksichtigen.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" onclick="togAcc(this)"><span>Schritt 3 — Taktfrequenz nach Preis-Leistung wählen</span><span class="acc-icon">+</span></button>
+      <div class="acc-body">H&ouml;here Taktfrequenz bringt mehr Speicherbandbreite, kostet aber mehr. QVL-Liste des Herstellers immer zuerst pr&uuml;fen!</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ GRAFIKKARTE ════════════════ -->
+<div class="page" id="gpu">
+<div class="container">
+  <div class="sec-head">
+    <h2>Grafikkarte (GPU)</h2>
+    <span class="sec-tag">APU &middot; GDDR &middot; Rendering &middot; Raytracing &middot; Parallelisierung</span>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Aufgabe</div>
+      <h3>Was macht eine GPU?</h3>
+      <ul>
+        <li>Verarbeitet Grafikdaten und &uuml;bersetzt sie in ein Bildformat</li>
+        <li>Monitoranschl&uuml;sse bei externer GPU <strong>auf der Karte</strong></li>
+        <li><strong>APU</strong> = Grafikchip direkt in die CPU integriert</li>
+        <li>Ausgabeformate: HDMI, DisplayPort, DVI, VGA</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">GPU vs. CPU</div>
+      <h3>Kernunterschiede</h3>
+      <ul>
+        <li><strong>CPU:</strong> 4&ndash;16 Kerne &middot; ~3500 MHz &middot; serielle Aufgaben</li>
+        <li><strong>GPU:</strong> 5000+ Kerne &middot; ~1000 MHz &middot; parallele Aufgaben</li>
+        <li>GPU-St&auml;rke: Massiv parallele Berechnungen</li>
+        <li>CPU-St&auml;rke: Komplexe sequentielle Logik</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Videospeicher</div>
+      <h3>GDDR-RAM</h3>
+      <ul>
+        <li><strong>GDDR</strong> = Graphics DDR &ndash; speziell f&uuml;r GPUs</li>
+        <li>Besonders hohe Taktrate gegen&uuml;ber normalem RAM</li>
+        <li>Aktuelle Generationen: GDDR6, GDDR6X, GDDR7</li>
+        <li>Mehr VRAM &rarr; bessere Performance bei hohen Aufl&ouml;sungen</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Auswahlkriterien</div>
+      <h3>Kaufentscheidung GPU</h3>
+      <ul>
+        <li>GPU-Generation &amp; Anzahl der Shader-Kerne / Taktrate</li>
+        <li>VRAM-Menge + Speichertyp (GDDR6 / GDDR7)</li>
+        <li>TGP = Total Graphics Power (relevant f&uuml;r Netzteil)</li>
+        <li>Software-Features: DLSS / FSR, Frame Generation</li>
+      </ul>
+    </div>
+  </div>
+  <h3 class="sub">Stromversorgung &uuml;ber PCIe</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Leistung</th><th>Anschluss</th><th>Hinweis</th></tr></thead>
+      <tbody>
+        <tr><td>75 W</td><td>Reiner PCIe-Slot</td><td>Ohne zus&auml;tzliche Kabel</td></tr>
+        <tr><td>150 W</td><td>6-Pol-Kabel</td><td>Ein Stromkabel vom Netzteil</td></tr>
+        <tr><td>225 W</td><td>2&times; 6-Pol oder 1&times; 8-Pol</td><td>Mittelklasse-GPUs</td></tr>
+        <tr><td>300 W+</td><td>6-Pol + 8-Pol</td><td>High-End-GPUs</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h3 class="sub">Schnittstellen der Grafikkarte</h3>
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="card">
+      <div class="card-tag">Intern (Mainboard)</div>
+      <h3>Verbindung zum System</h3>
+      <div class="pills"><span class="pill pill-a">PCIe x16</span><span class="pill">PCI (Legacy)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-tag">Extern (Monitor)</div>
+      <h3>Ausgabeanschl&uuml;sse</h3>
+      <div class="pills">
+        <span class="pill pill-a">DisplayPort</span>
+        <span class="pill pill-a">HDMI</span>
+        <span class="pill">DVI</span>
+        <span class="pill">VGA</span>
+        <span class="pill">USB-C (VR)</span>
+      </div>
+    </div>
+  </div>
+  <h3 class="sub">Rendering, Raytracing &amp; GPU-Parallelisierung</h3>
+  <div class="accordion">
+    <div class="acc-item">
+      <button class="acc-btn" onclick="togAcc(this)"><span>Rendering &ndash; 3D zu 2D</span><span class="acc-icon">+</span></button>
+      <div class="acc-body">Rendering bezeichnet den Prozess, bei dem 3D-Szenendaten (Geometrie, Texturen, Beleuchtung) in ein anzeigbares 2D-Bild umgewandelt werden. Dies ist die Kernaufgabe jeder GPU.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" onclick="togAcc(this)"><span>Raytracing &ndash; Simulation von Lichtstrahlen</span><span class="acc-icon">+</span></button>
+      <div class="acc-body">Raytracing simuliert den physikalischen Weg von Lichtstrahlen. Ermöglicht realistische Spiegelungen, Schatten und indirekte Beleuchtung. Rechenaufwändig, da für jeden Pixel viele Strahlen berechnet werden.</div>
+    </div>
+    <div class="acc-item">
+      <button class="acc-btn" onclick="togAcc(this)"><span>GPU-Parallelisierung f&uuml;r wissenschaftliche Simulationen</span><span class="acc-icon">+</span></button>
+      <div class="acc-body">Simulationssoftware nutzt GPU-Beschleunigung durch Parallelverarbeitung. Tausende GPU-Kerne berechnen gleichzeitig Simulationsschritte. Typische Anwendungen: CFD (Str&ouml;mungssimulation), FEA (Finite-Elemente-Analyse), Crashtests. Kompatibel mit NVIDIA- und AMD-GPUs.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ SPEICHERMEDIEN ════════════════ -->
+<div class="page" id="hdd">
+<div class="container">
+  <div class="sec-head">
+    <h2>Speichermedien (HDD)</h2>
+    <span class="sec-tag">Aufbau &middot; Geometrie &middot; SATA &middot; Performance</span>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Formfaktoren</div>
+      <h3>Gr&ouml;&szlig;en &amp; Einsatzgebiet</h3>
+      <ul>
+        <li><strong>3,5 Zoll</strong> &rarr; Desktop-PCs, max. ca. 6 TB, 12 V</li>
+        <li><strong>2,5 Zoll</strong> &rarr; Laptops / kompakte Systeme, 5 V</li>
+        <li>1,8 Zoll &rarr; kaum noch verbreitet</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Aufbau</div>
+      <h3>Wichtigste Komponenten</h3>
+      <ul>
+        <li>Magnetische Scheiben (Platten) + Motor</li>
+        <li>Aktuator mit Lese-/Schreibkopf</li>
+        <li>Festplattencontroller (Mini-Platine)</li>
+        <li>Versiegeltes Geh&auml;use (Reinraumatmosph&auml;re)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Empfindlichkeit</div>
+      <h3>Warum kein Staub?</h3>
+      <ul>
+        <li>Lese-/Schreibkopf schwebt auf minimalem Luftfilm</li>
+        <li>Staubpartikel gr&ouml;&szlig;er als Luftfilm-Abstand</li>
+        <li>&rarr; Kopf kratzt auf Scheibe &rarr; irreparabler Datenverlust</li>
+        <li>Feuchtigkeit st&ouml;rt zus&auml;tzlich den Luftfilm</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Performance</div>
+      <h3>Kenngr&ouml;&szlig;en HDD</h3>
+      <ul>
+        <li><strong>Datentransferrate</strong> &rarr; typisch ~150 MB/s (SATA)</li>
+        <li><strong>Zugriffszeit / Suchzeit</strong> &rarr; typisch ~7 ms</li>
+        <li><strong>Schnittstelle:</strong> SATA f&uuml;r HDDs, NVMe/PCIe f&uuml;r SSDs</li>
+        <li>NVMe-SSDs: bis zu 7.000+ MB/s (Faktor ~50 schneller)</li>
+      </ul>
+    </div>
+  </div>
+  <h3 class="sub">Die 5 Geometrie-Dimensionen einer HDD</h3>
+  <div class="geo-grid">
+    <div class="geo-cell"><div class="geo-n">01</div><div class="geo-name">Seiten</div><div class="geo-desc">Ober- und Unterseite jeder magnetischen Platte</div></div>
+    <div class="geo-cell"><div class="geo-n">02</div><div class="geo-name">Spuren / Tracks</div><div class="geo-desc">Konzentrische Kreise auf jeder Plattenoberfläche</div></div>
+    <div class="geo-cell"><div class="geo-n">03</div><div class="geo-name">Zylinder</div><div class="geo-desc">Alle übereinanderliegenden Spuren aller Platten</div></div>
+    <div class="geo-cell"><div class="geo-n">04</div><div class="geo-name">Bl&ouml;cke</div><div class="geo-desc">4096-Byte-Einheiten auf den Spuren</div></div>
+    <div class="geo-cell"><div class="geo-n">05</div><div class="geo-name">Sektoren</div><div class="geo-desc">Winkelpositionen, enthalten mehrere Blöcke</div></div>
+  </div>
+  <div class="callout">
+    <strong>Koordinatensystem der HDD:</strong><br>
+    Seite + Zylinder + Sektor &rarr; eindeutige Adresse f&uuml;r jeden Block. Der Controller kann so jeden Datenpunkt gezielt ansteuern.
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ VERKAUFSGESPRÄCH ════════════════ -->
+<div class="page" id="sales">
+<div class="container">
+  <div class="sec-head">
+    <h2>Phasen des Verkaufsgespr&auml;chs</h2>
+    <span class="sec-tag">7 Phasen &middot; B2B-Verkauf &middot; Kaufm&auml;nnische Begriffe</span>
+  </div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-step">Phase 01</div><div class="tl-name">Vorbereitung</div><div class="tl-desc">Informationen &uuml;ber den Kunden sammeln, eigene Produkte kennen, Gespr&auml;chsziel definieren, Unterlagen vorbereiten.</div></div></div>
+    <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-step">Phase 02</div><div class="tl-name">Kontaktaufnahme &amp; Begr&uuml;&szlig;ung</div><div class="tl-desc">Erster Eindruck z&auml;hlt. Freundliche Begr&uuml;&szlig;ung, Vertrauen aufbauen, Smalltalk als Gespr&auml;chseinstieg nutzen.</div></div></div>
+    <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-step">Phase 03</div><div class="tl-name">Bedarfsermittlung</div><div class="tl-desc">Durch offene Fragen den Kundenbedarf herausfinden. Aktives Zuh&ouml;ren, Anforderungen notieren, Budget erfragen.</div></div></div>
+    <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-step">Phase 04</div><div class="tl-name">Angebotspräsentation</div><div class="tl-desc">Passende Produkte vorstellen, Kundennutzen in den Vordergrund stellen, auf m&ouml;gliche Einw&auml;nde vorbereitet sein.</div></div></div>
+    <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-step">Phase 05</div><div class="tl-name">Einwandbehandlung</div><div class="tl-desc">Einw&auml;nde sachlich aufnehmen. Methoden: Bumerang-Methode, Vorwegnahme von Einw&auml;nden, Referenzen nutzen.</div></div></div>
+    <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-step">Phase 06</div><div class="tl-name">Abschluss</div><div class="tl-desc">Kaufsignale erkennen, Abschluss aktiv herbeif&uuml;hren, Konditionen klarstellen (Skonto, Zahlungsziel, Liefertermin).</div></div></div>
+    <div class="tl-item"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-right"><div class="tl-step">Phase 07</div><div class="tl-name">Nachbereitung</div><div class="tl-desc">Auftrag dokumentieren, Kundenzufriedenheit sicherstellen, Follow-up planen, CRM-System pflegen.</div></div></div>
+  </div>
+  <h3 class="sub">Kaufm&auml;nnische Begriffe</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Begriff</th><th>Erkl&auml;rung</th><th>Allgemeines Beispiel</th></tr></thead>
+      <tbody>
+        <tr><td class="td-k">Skonto</td><td>Preisnachlass bei Zahlung innerhalb der vereinbarten Frist</td><td>2 % bei Zahlung binnen 14 Tagen</td></tr>
+        <tr><td class="td-k">Nettobetrag</td><td>Preis ohne Mehrwertsteuer</td><td>1.000,00 &euro;</td></tr>
+        <tr><td class="td-k">USt. / MwSt.</td><td>Mehrwertsteuer, in Deutschland 19 %</td><td>190,00 &euro;</td></tr>
+        <tr><td class="td-k">Bruttobetrag</td><td>Nettobetrag + Mehrwertsteuer = Rechnungssumme</td><td>1.190,00 &euro;</td></tr>
+        <tr><td class="td-k">Zahlungsziel</td><td>Vereinbarte Frist zur Begleichung der Rechnung</td><td>14 Tage oder 30 Tage netto</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Fragetechniken im Verkaufsgespr&auml;ch</h3>
+  <div class="callout">
+    Die <strong>Art der Fragestellung</strong> kann den <strong>Informationsgehalt einer Antwort</strong> bestimmen. Je nach Gespr&auml;chssituation setzt man unterschiedliche Fragetechniken ein.
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Fragetechnik</th><th>Erl&auml;uterung</th><th>Beispiel</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-k">Geschlossene Frage</td>
+          <td>Die Antwort ist <strong>eindeutig</strong>: ja oder nein.</td>
+          <td>„Sind Sie zufrieden mit unserem Angebot?"</td>
+        </tr>
+        <tr>
+          <td class="td-k">Offene Frage</td>
+          <td>Die Antwort ist <strong>informativ</strong>; der Gespr&auml;chspartner muss sich entscheiden.</td>
+          <td>„Welche Monitorgr&ouml;&szlig;e bevorzugen Sie in Ihrem Unternehmen?"</td>
+        </tr>
+        <tr>
+          <td class="td-k">Alternativfrage</td>
+          <td>Der Gespr&auml;chspartner <strong>w&auml;hlt seine Antwort alternativ aus</strong>.</td>
+          <td>„Wollen wir Mittwoch oder Donnerstag noch einmal telefonieren?"</td>
+        </tr>
+        <tr>
+          <td class="td-k">Kontrollfrage</td>
+          <td>Die Gespr&auml;chspartner <strong>verst&auml;ndigen sich</strong>, ob sie &uuml;bereinstimmen.</td>
+          <td>„Meinen Sie auch, dass die Qualit&auml;t schlecht ist?"</td>
+        </tr>
+        <tr>
+          <td class="td-k">Motivationsfrage</td>
+          <td>Der Gespr&auml;chspartner wird <strong>motiviert, eine zustimmende Antwort</strong> zu geben.</td>
+          <td>„Werden Sie das Angebot annehmen, wenn ich Ihnen die Software gleich installiere?"</td>
+        </tr>
+        <tr>
+          <td class="td-k">Suggestivfrage</td>
+          <td>Die Antwort wird durch die Art der Frage <strong>beeinflusst</strong>.</td>
+          <td>„Sie sind bei uns schon lange Kunde und ich werde Ihnen entgegenkommen. Nehmen Sie das Angebot an?"</td>
+        </tr>
+        <tr>
+          <td class="td-k">Gegenfrage</td>
+          <td>Der Gefragte <strong>kontert mit einer eigenen Frage</strong>, um dem Gespr&auml;ch eine andere Wendung zu geben.</td>
+          <td>Verk&auml;ufer: „Wann k&ouml;nnen Sie die Ware abholen?" &mdash; Kunde: „K&ouml;nnten Sie die Frage denn auch liefern?"</td>
+        </tr>
+        <tr>
+          <td class="td-k">Informationsfrage</td>
+          <td>Die Antwort soll <strong>informieren</strong>.</td>
+          <td>„Wann haben Sie unser Angebot erhalten?"</td>
+        </tr>
+        <tr>
+          <td class="td-k">Rhetorische Frage</td>
+          <td>Der Fragende m&ouml;chte <strong>Aufmerksamkeit erlangen</strong>.</td>
+          <td>„Was k&ouml;nnten wir tun? Wir senden Ihnen die Ware zu und berechnen Ihnen 12,00 &euro;."</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Fragetechniken auf einen Blick</h3>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-tag">Informationsgewinn</div>
+      <h3>Offene Frage</h3>
+      <ul>
+        <li>Beginnt mit: Wer, Was, Wie, Wo, Wann, Warum</li>
+        <li>Bringt <strong>viele Informationen</strong></li>
+        <li>Ideal in der <strong>Bedarfsermittlung</strong> (Phase 3)</li>
+        <li>Gesp&auml;chspartner muss ausf&uuml;hrlich antworten</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Eingrenzung</div>
+      <h3>Geschlossene Frage</h3>
+      <ul>
+        <li>Antwort: nur Ja oder Nein</li>
+        <li>Gut f&uuml;r <strong>Bestätigungen</strong> und Abschluss</li>
+        <li>Zu viele &rarr; Gespr&auml;ch wirkt wie Verh&ouml;r</li>
+        <li>Ideal im <strong>Abschluss</strong> (Phase 6)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Lenkung</div>
+      <h3>Alternativfrage</h3>
+      <ul>
+        <li>Bietet zwei Optionen an</li>
+        <li>Beide Optionen f&uuml;hren zum Ziel des Verk&auml;ufers</li>
+        <li>Vermeidet die Antwort „Nein"</li>
+        <li>Eingesetzt bei <strong>Terminvereinbarung</strong> oder Abschluss</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Einflussnahme</div>
+      <h3>Suggestivfrage</h3>
+      <ul>
+        <li>Lenkt die Antwort in eine bestimmte Richtung</li>
+        <li>Nutzung mit Bedacht &mdash; kann manipulativ wirken</li>
+        <li>Aufbau von <strong>sozialem Druck</strong></li>
+        <li>Beispiel: Nutzung von Referenzen oder Tradition</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Kontrolle</div>
+      <h3>Kontrollfrage</h3>
+      <ul>
+        <li>Sichert gegenseitiges Verst&auml;ndnis</li>
+        <li>Verhindert Missverst&auml;ndnisse</li>
+        <li>Ideal nach Erl&auml;uterungen oder Angebotspr&auml;sentationen</li>
+        <li>Zeigt aktives Zuh&ouml;ren</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Taktik</div>
+      <h3>Gegenfrage</h3>
+      <ul>
+        <li>Gibt Gespr&auml;chsf&uuml;hrung zur&uuml;ck</li>
+        <li>Zeit zum Nachdenken gewinnen</li>
+        <li>Einwand in eine Frage verwandeln</li>
+        <li>Einsatz in der <strong>Einwandbehandlung</strong> (Phase 5)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub" style="margin-top:3rem;">Kommunikationsmodelle</h3>
+
+  <!-- SENDER-EMPFÄNGER -->
+  <h3 class="sub">Sender-Empf&auml;nger-Modell (Shannon &amp; Weaver)</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Grundprinzip</div>
+      <h3>Wie Kommunikation funktioniert</h3>
+      <ul>
+        <li><strong>Sender</strong> kodiert eine Nachricht (Gedanke &rarr; Sprache/Geste)</li>
+        <li><strong>Kanal</strong> &uuml;bertr&auml;gt die Nachricht (Sprache, Schrift, Telefon)</li>
+        <li><strong>Empf&auml;nger</strong> dekodiert die Nachricht (Sprache &rarr; Verst&auml;ndnis)</li>
+        <li><strong>R&uuml;ckkopplung</strong> zeigt an, ob die Nachricht angekommen ist</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">St&ouml;rquellen</div>
+      <h3>Was schiefgehen kann</h3>
+      <ul>
+        <li><strong>Kodierungsfehler:</strong> Sender dr&uuml;ckt sich unklar aus</li>
+        <li><strong>Kanalrauschen:</strong> Lautstärke, schlechte Verbindung, Ablenkung</li>
+        <li><strong>Dekodierungsfehler:</strong> Empf&auml;nger interpretiert falsch</li>
+        <li><strong>Fehlende R&uuml;ckkopplung:</strong> kein Feedback &rarr; Missverst&auml;ndnis bleibt unentdeckt</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Element</th><th>Bedeutung</th><th>Beispiel im Verkauf</th></tr></thead>
+      <tbody>
+        <tr><td class="td-k">Sender</td><td>Person, die eine Nachricht &uuml;bermittelt</td><td>Verk&auml;ufer erkl&auml;rt ein Produkt</td></tr>
+        <tr><td class="td-k">Nachricht</td><td>Der zu &uuml;bermittelnde Inhalt</td><td>Produktvorteil, Preis, Lieferzeit</td></tr>
+        <tr><td class="td-k">Kanal / Medium</td><td>Weg der &Uuml;bertragung</td><td>Gespr&auml;ch, E-Mail, Pr&auml;sentation</td></tr>
+        <tr><td class="td-k">Empf&auml;nger</td><td>Person, die die Nachricht aufnimmt</td><td>Kunde h&ouml;rt dem Verk&auml;ufer zu</td></tr>
+        <tr><td class="td-k">R&uuml;ckkopplung</td><td>Reaktion des Empf&auml;ngers</td><td>Fragen, Nicken, Einwand erheben</td></tr>
+        <tr><td class="td-k">St&ouml;rung</td><td>Alles, was &Uuml;bertragung beeintr&auml;chtigt</td><td>Lärm, Missverst&auml;ndnis, Vorurteile</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4-SEITEN-MODELL -->
+  <h3 class="sub">Das 4-Seiten-Modell (Schulz von Thun)</h3>
+  <div class="callout">
+    Jede Nachricht hat <strong>vier Seiten</strong> gleichzeitig. Der Empf&auml;nger kann auf jeder dieser vier Ebenen etwas anderes verstehen als der Sender meinte.
+  </div>
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid #1a56e8;">
+      <div class="card-tag">Seite 1</div>
+      <h3>Sachinhalt</h3>
+      <ul>
+        <li>Wor&uuml;ber ich informiere</li>
+        <li>Fakten, Daten, Sachverhalte</li>
+        <li>Beispiel: <em>„Das Notebook hat 16 GB RAM."</em></li>
+        <li>Frage: Was ist der objektive Inhalt der Aussage?</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid #177a45;">
+      <div class="card-tag">Seite 2</div>
+      <h3>Selbstoffenbarung</h3>
+      <ul>
+        <li>Was ich von mir preisgebe</li>
+        <li>Gef&uuml;hle, Meinungen, Pers&ouml;nlichkeit</li>
+        <li>Beispiel: <em>„Ich kenne mich mit Technik aus."</em></li>
+        <li>Frage: Was verr&auml;t der Sender &uuml;ber sich selbst?</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid #c0291a;">
+      <div class="card-tag">Seite 3</div>
+      <h3>Beziehungsseite</h3>
+      <ul>
+        <li>Was ich vom Empf&auml;nger halte</li>
+        <li>Wie ich mein Verh&auml;ltnis zu ihm sehe</li>
+        <li>Beispiel: <em>„Ich glaube, du verstehst das nicht von selbst."</em></li>
+        <li>Frage: Wie behandelt der Sender den Empf&auml;nger?</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid #e07b00;">
+      <div class="card-tag">Seite 4</div>
+      <h3>Appell</h3>
+      <ul>
+        <li>Was ich beim Empf&auml;nger erreichen m&ouml;chte</li>
+        <li>Offen oder verdeckt</li>
+        <li>Beispiel: <em>„Kauf dieses Produkt!"</em></li>
+        <li>Frage: Wozu will der Sender den Empf&auml;nger bewegen?</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>Beispiel im Verkauf:</strong> Aussage des Kunden: „Das ist ganz sch&ouml;n teuer."<br>
+    <strong>Sachinhalt:</strong> Der Preis ist hoch. &nbsp;|&nbsp;
+    <strong>Selbstoffenbarung:</strong> Ich habe ein begrenztes Budget. &nbsp;|&nbsp;
+    <strong>Beziehungsseite:</strong> Du machst mir ein schlechtes Angebot. &nbsp;|&nbsp;
+    <strong>Appell:</strong> Mach mir einen besseren Preis!
+  </div>
+
+  <!-- EISBERGMODELL -->
+  <h3 class="sub">Das Eisbergmodell (Freud / Watzlawick)</h3>
+  <div class="grid-2">
+    <div class="card" style="border-top:3px solid #1a56e8;">
+      <div class="card-tag">Sichtbarer Teil &mdash; 20 %</div>
+      <h3>Sachebene (Kopf)</h3>
+      <ul>
+        <li>Was man <strong>offen sieht und h&ouml;rt</strong></li>
+        <li>Fakten, Zahlen, Argumente</li>
+        <li>Vertragsbedingungen, Produktspezifikationen</li>
+        <li>Rationale Entscheidungsgrundlagen</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid #555;">
+      <div class="card-tag">Unsichtbarer Teil &mdash; 80 %</div>
+      <h3>Beziehungsebene (Bauch)</h3>
+      <ul>
+        <li>Was <strong>unter der Oberfl&auml;che</strong> liegt</li>
+        <li>Gef&uuml;hle, Sympathie, Vertrauen</li>
+        <li>Vorurteile, Werte, Bed&uuml;rfnisse</li>
+        <li>Erfahrungen und unbewusste Motive</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>Bedeutung f&uuml;r den Verkauf:</strong> Kaufentscheidungen werden meist <strong>emotional</strong> getroffen und nachtr&auml;glich rational begr&uuml;ndet. Ein Verk&auml;ufer, der nur auf Sachargumente setzt, erreicht nur 20 % der Entscheidungsebene. Vertrauen, Sympathie und Verst&auml;ndnis f&uuml;r die Beziehungsebene sind entscheidend.
+  </div>
+
+  <!-- INFORMATIONSVERLUSTTREPPE -->
+  <h3 class="sub">Informationsverlusttreppe</h3>
+  <div class="callout">
+    Bei jeder Kommunikation geht Information verloren &mdash; vom Gedanken des Senders bis zur Handlung des Empf&auml;ngers. Die Treppe zeigt, wo und wie viel verloren geht.
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Stufe</th><th>Bezeichnung</th><th>Verlustursache</th><th>Typischer Restinhalt</th></tr></thead>
+      <tbody>
+        <tr><td style="font-family:var(--mono);font-weight:700;color:var(--accent);">100 %</td><td class="td-k">Was jemand denkt</td><td>Ausgangspunkt &mdash; vollst&auml;ndiger Gedanke</td><td>Alle Informationen vorhanden</td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;">~80 %</td><td class="td-k">Was jemand sagen will</td><td>Nicht alles l&auml;sst sich in Worte fassen</td><td>Gedanken werden vereinfacht</td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;">~60 %</td><td class="td-k">Was jemand tats&auml;chlich sagt</td><td>Formulierungsm&auml;ngel, Nervosit&auml;t, Zeitdruck</td><td>Aussage ist l&uuml;ckenhaft</td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;">~40 %</td><td class="td-k">Was der andere h&ouml;rt</td><td>Kanalrauschen, Ablenkung, selektives H&ouml;ren</td><td>Nur Teile werden wahrgenommen</td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;">~25 %</td><td class="td-k">Was der andere versteht</td><td>Interpretation, Vorwissen, Missverst&auml;ndnisse</td><td>Eigene Bedeutung wird zugewiesen</td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;">~15 %</td><td class="td-k">Was der andere beh&auml;lt</td><td>Vergessen, &Uuml;berlastung des Kurzzeitged&auml;chtnisses</td><td>Kernbotschaft (wenn &uuml;berhaupt)</td></tr>
+        <tr><td style="font-family:var(--mono);font-weight:700;color:var(--wrong);">~10 %</td><td class="td-k">Was der andere tut</td><td>Motivation, Priorit&auml;ten, Widerstand</td><td>Handlung (oft verfremdet)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Konsequenzen f&uuml;r den Verkauf</div>
+      <h3>Was das bedeutet</h3>
+      <ul>
+        <li>Einfache, klare Sprache verwenden</li>
+        <li>Kernbotschaft <strong>mehrfach wiederholen</strong></li>
+        <li>Aktiv r&uuml;ckkoppeln: „Habe ich Sie richtig verstanden?"</li>
+        <li>Schriftliche Zusammenfassung nach dem Gespr&auml;ch senden</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Gegenmittel</div>
+      <h3>Verlust reduzieren</h3>
+      <ul>
+        <li><strong>Visualisieren:</strong> Bilder und Grafiken bleiben besser im Ged&auml;chtnis</li>
+        <li><strong>Zusammenfassen:</strong> Am Ende des Gespr&auml;chs Kernpunkte wiederholen</li>
+        <li><strong>Nachfragen:</strong> Kontrollfragen sichern das Verst&auml;ndnis</li>
+        <li><strong>Priorisieren:</strong> Maximal 3 Kernbotschaften pro Gespr&auml;ch</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════ ELEKTRIK ════════════════ -->
+<div class="page" id="elektrik">
+<div class="container">
+  <div class="sec-head">
+    <h2>Elektrik &mdash; U, I, R, P</h2>
+    <span class="sec-tag">Ohmsches Gesetz &middot; Leistungsformel &middot; &Uuml;bungsaufgaben</span>
+  </div>
+
+  <h3 class="sub">Theoretische Grundlagen</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Ohmsches Gesetz</div>
+      <h3>U = R &middot; I</h3>
+      <ul>
+        <li><strong>U</strong> = Spannung in Volt [V]</li>
+        <li><strong>R</strong> = Widerstand in Ohm [&Omega;]</li>
+        <li><strong>I</strong> = Stromst&auml;rke in Ampere [A]</li>
+        <li>Beschreibt den Zusammenhang zwischen Spannung, Widerstand und Strom in einem Leiter</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Leistungsformel</div>
+      <h3>P = U &middot; I</h3>
+      <ul>
+        <li><strong>P</strong> = Leistung in Watt [W]</li>
+        <li><strong>U</strong> = Spannung in Volt [V]</li>
+        <li><strong>I</strong> = Stromst&auml;rke in Ampere [A]</li>
+        <li>Gibt an, wie viel elektrische Energie pro Sekunde umgesetzt wird</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Formel&uuml;bersicht &mdash; alle Umstellungen</h3>
+  <div class="grid-3">
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Spannung</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">U = R &middot; I</div>
+      <div style="font-size:0.78rem;color:#555;">Widerstand &times; Strom</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Widerstand</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">R = U / I</div>
+      <div style="font-size:0.78rem;color:#555;">Spannung &divide; Strom</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Strom</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">I = U / R</div>
+      <div style="font-size:0.78rem;color:#555;">Spannung &divide; Widerstand</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Leistung</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">P = U &middot; I</div>
+      <div style="font-size:0.78rem;color:#555;">Spannung &times; Strom</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Leistung &uuml;ber R</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">P = I&sup2; &middot; R</div>
+      <div style="font-size:0.78rem;color:#555;">Strom&sup2; &times; Widerstand</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Leistung &uuml;ber U</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">P = U&sup2; / R</div>
+      <div style="font-size:0.78rem;color:#555;">Spannung&sup2; &divide; Widerstand</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Physikalische Gr&ouml;&szlig;en im &Uuml;berblick</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Gr&ouml;&szlig;e</th><th>Symbol</th><th>Einheit</th><th>Zeichen</th><th>Typische Werte (PC-Bereich)</th></tr></thead>
+      <tbody>
+        <tr><td class="td-k">Spannung</td><td style="font-family:var(--mono);font-weight:600;">U</td><td>Volt</td><td style="font-family:var(--mono);">V</td><td>3,3 V &middot; 5 V &middot; 12 V (PC-Netzteile)</td></tr>
+        <tr><td class="td-k">Stromst&auml;rke</td><td style="font-family:var(--mono);font-weight:600;">I</td><td>Ampere</td><td style="font-family:var(--mono);">A</td><td>0,5 A &ndash; 20 A je nach Schiene</td></tr>
+        <tr><td class="td-k">Widerstand</td><td style="font-family:var(--mono);font-weight:600;">R</td><td>Ohm</td><td style="font-family:var(--mono);">&Omega;</td><td>wenige &Omega; bis k&Omega; (Leitungen, Bauteile)</td></tr>
+        <tr><td class="td-k">Leistung</td><td style="font-family:var(--mono);font-weight:600;">P</td><td>Watt</td><td style="font-family:var(--mono);">W</td><td>75 W (PCIe-Slot) &middot; 850 W (Netzteil)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>Merkhilfe Formeldreieck:</strong> Schreibe U oben, R und I nebeneinander darunter. Decke die gesuchte Gr&ouml;&szlig;e ab:<br>
+    U abdecken &rarr; R &middot; I &nbsp;|&nbsp; R abdecken &rarr; U / I &nbsp;|&nbsp; I abdecken &rarr; U / R
+  </div>
+
+  <h3 class="sub">Interaktiver Formelrechner</h3>
+  <div class="calc-box">
+    <div style="font-size:0.72rem;font-family:var(--mono);color:#888;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem;">Zwei Werte eingeben &mdash; dritten berechnen lassen</div>
+    <div class="calc-grid">
+      <div class="calc-field">
+        <label>U &mdash; Spannung [V]</label>
+        <input type="number" id="cu" placeholder="z. B. 12" step="any" oninput="calcE()">
+      </div>
+      <div class="calc-field">
+        <label>R &mdash; Widerstand [&Omega;]</label>
+        <input type="number" id="cr" placeholder="z. B. 6" step="any" oninput="calcE()">
+      </div>
+      <div class="calc-field">
+        <label>I &mdash; Strom [A]</label>
+        <input type="number" id="ci" placeholder="z. B. 2" step="any" oninput="calcE()">
+      </div>
+    </div>
+    <div class="calc-result" id="cres">Bitte zwei Felder ausf&uuml;llen &hellip;</div>
+    <button class="btn-clear" onclick="clearCalc()">Zur&uuml;cksetzen</button>
+  </div>
+
+  <h3 class="sub">5 &Uuml;bungsaufgaben U &middot; I &middot; R &middot; P mit Schritt-f&uuml;r-Schritt-L&ouml;sung</h3>
+  <div id="aufgaben"></div>
+
+  <!-- ── ENERGIEVERBRAUCH ── -->
+  <h3 class="sub" style="margin-top:3rem;">Energieverbrauch &uuml;ber einen Zeitraum</h3>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Grundformel</div>
+      <h3>E = P &middot; t</h3>
+      <ul>
+        <li><strong>E</strong> = Energie in Wattstunden [Wh] oder Kilowattstunden [kWh]</li>
+        <li><strong>P</strong> = Leistung in Watt [W]</li>
+        <li><strong>t</strong> = Zeit in Stunden [h]</li>
+        <li>1 kWh = 1000 Wh = Energie eines 1000-W-Ger&auml;ts &uuml;ber 1 Stunde</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Stromkosten</div>
+      <h3>Kosten = E &middot; Preis</h3>
+      <ul>
+        <li>Preis in Deutschland: ca. <strong>0,30 &euro;/kWh</strong> (Haushalte 2025)</li>
+        <li>Kosten [&euro;] = E [kWh] &middot; Strompreis [&euro;/kWh]</li>
+        <li>E [kWh] = P [W] &middot; t [h] / 1000</li>
+        <li>Relevanz: Betriebskosten eines gr&ouml;&szlig;eren IT-Bestands über ein Jahr</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Formel&uuml;bersicht &mdash; Umstellungen Energie</h3>
+  <div class="grid-3">
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Energie</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">E = P &middot; t</div>
+      <div style="font-size:0.78rem;color:#555;">Leistung &times; Zeit [Wh]</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Leistung</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">P = E / t</div>
+      <div style="font-size:0.78rem;color:#555;">Energie &divide; Zeit [W]</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Zeit</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">t = E / P</div>
+      <div style="font-size:0.78rem;color:#555;">Energie &divide; Leistung [h]</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Umrechnung</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">kWh = Wh / 1000</div>
+      <div style="font-size:0.78rem;color:#555;">Wh durch 1000 teilen</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Kosten</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">K = E &middot; p</div>
+      <div style="font-size:0.78rem;color:#555;">Energie [kWh] &times; Preis [&euro;/kWh]</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="card-tag">Jahresverbrauch</div>
+      <div style="font-size:1.2rem;font-weight:700;margin:0.6rem 0;font-family:var(--mono);">t = 8760 h</div>
+      <div style="font-size:0.78rem;color:#555;">365 Tage &times; 24 h = 8760 h/Jahr</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Gr&ouml;&szlig;e</th><th>Symbol</th><th>Einheit</th><th>Zeichen</th><th>Typische Werte</th></tr></thead>
+      <tbody>
+        <tr><td class="td-k">Energie</td><td style="font-family:var(--mono);font-weight:600;">E</td><td>Wattstunde / Kilowattstunde</td><td style="font-family:var(--mono);">Wh / kWh</td><td>1 PC-Tag: ~1&ndash;5 kWh</td></tr>
+        <tr><td class="td-k">Leistung</td><td style="font-family:var(--mono);font-weight:600;">P</td><td>Watt</td><td style="font-family:var(--mono);">W</td><td>75 W (PCIe-Slot) &middot; 480 W (Workstation unter Last)</td></tr>
+        <tr><td class="td-k">Zeit</td><td style="font-family:var(--mono);font-weight:600;">t</td><td>Stunde</td><td style="font-family:var(--mono);">h</td><td>8 h/Arbeitstag &middot; 8760 h/Jahr</td></tr>
+        <tr><td class="td-k">Strompreis</td><td style="font-family:var(--mono);font-weight:600;">p</td><td>Euro pro Kilowattstunde</td><td style="font-family:var(--mono);">&euro;/kWh</td><td>~0,30 &euro;/kWh (DE 2025)</td></tr>
+        <tr><td class="td-k">Kosten</td><td style="font-family:var(--mono);font-weight:600;">K</td><td>Euro</td><td style="font-family:var(--mono);">&euro;</td><td>abh&auml;ngig von Verbrauch &amp; Preis</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>Wichtig &mdash; Einheiten konsistent halten:</strong><br>
+    Die Formel E = P &middot; t liefert Wh, wenn P in Watt und t in Stunden angegeben wird.<br>
+    F&uuml;r kWh anschlie&szlig;end durch 1000 teilen. Stromrechnung wird immer in kWh abgerechnet.
+  </div>
+
+  <h3 class="sub">Interaktiver Energie- und Kostenrechner</h3>
+  <div class="calc-box">
+    <div style="font-size:0.72rem;font-family:var(--mono);color:#888;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem;">Leistung, Zeit und Strompreis eingeben</div>
+    <div class="calc-grid">
+      <div class="calc-field">
+        <label>P &mdash; Leistung [W]</label>
+        <input type="number" id="ep" placeholder="z. B. 480" step="any" oninput="calcEnergy()">
+      </div>
+      <div class="calc-field">
+        <label>t &mdash; Zeit [h]</label>
+        <input type="number" id="et" placeholder="z. B. 8" step="any" oninput="calcEnergy()">
+      </div>
+      <div class="calc-field">
+        <label>Preis [&euro;/kWh]</label>
+        <input type="number" id="epr" placeholder="z. B. 0.30" step="any" value="0.30" oninput="calcEnergy()">
+      </div>
+    </div>
+    <div class="calc-result" id="eres">Leistung und Zeit eingeben &hellip;</div>
+    <button class="btn-clear" onclick="clearEnergy()">Zur&uuml;cksetzen</button>
+  </div>
+
+  <h3 class="sub">5 &Uuml;bungsaufgaben Energieverbrauch mit Schritt-f&uuml;r-Schritt-L&ouml;sung</h3>
+  <div id="aufgaben-e"></div>
+
+</div>
+</div>
+
+<!-- ════════════════ NETZTEILE ════════════════ -->
+<div class="page" id="netzteil">
+<div class="container">
+  <div class="sec-head">
+    <h2>Netzteile</h2>
+    <span class="sec-tag">AC/DC &middot; Wirkungsgrad &middot; 80 PLUS &middot; Schutzfunktionen &middot; Anschl&uuml;sse</span>
+  </div>
+
+  <h3 class="sub">Aufgaben &amp; Grundprinzip</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Kernaufgaben</div>
+      <h3>Was macht ein Netzteil?</h3>
+      <ul>
+        <li>Wandelt Netzspannung (AC, 230 V) in Gleichspannung (DC) um</li>
+        <li>Liefert verschiedene Spannungen f&uuml;r alle PC-Komponenten</li>
+        <li>Sch&uuml;tzt vor Spannungsspitzen, &Uuml;berlastung und Kurzschluss</li>
+        <li>Gew&auml;hrleistet stabile Stromversorgung unter Last</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">AC vs. DC</div>
+      <h3>Strom&shy;arten</h3>
+      <ul>
+        <li><strong>AC</strong> (Alternating Current) = Wechselstrom aus der Steckdose, 230 V / 50 Hz in Europa</li>
+        <li><strong>DC</strong> (Direct Current) = Gleichstrom f&uuml;r elektronische Bauteile</li>
+        <li>Netzteil &uuml;bernimmt die Umwandlung: AC &rarr; DC</li>
+        <li>Gleichrichter + Kondensatoren + Schaltregler arbeiten zusammen</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Interne Komponenten</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Komponente</th><th>Aufgabe</th></tr></thead>
+      <tbody>
+        <tr><td class="td-k">Gleichrichter</td><td>Wandelt Wechselstrom (AC) in pulsierenden Gleichstrom (DC) um</td></tr>
+        <tr><td class="td-k">Filter / Kondensatoren</td><td>Gl&auml;ttet die pulsierende Spannung zu einem stabilen Gleichstrom</td></tr>
+        <tr><td class="td-k">Transformator</td><td>Passt die Spannungsh&ouml;he an (Hoch- auf Niederspannung)</td></tr>
+        <tr><td class="td-k">Schaltregler</td><td>Effiziente Spannungswandlung mit hohem Wirkungsgrad</td></tr>
+        <tr><td class="td-k">L&uuml;fter</td><td>K&uuml;hlung der internen Bauteile, oft temperaturgesteuert</td></tr>
+        <tr><td class="td-k">Schutzschaltungen</td><td>OVP, OCP, OTP, SCP, UVP (siehe unten)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Ausgegebene Spannungen &amp; Anschl&uuml;sse</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Spannungsschienen</div>
+      <h3>Ausgangsspannungen</h3>
+      <ul>
+        <li><strong>+12 V</strong> &rarr; CPU, GPU (Hauptverbraucher)</li>
+        <li><strong>+5 V</strong> &rarr; USB-Ports, &auml;ltere Laufwerke</li>
+        <li><strong>+3,3 V</strong> &rarr; Mainboard-Logik, RAM</li>
+        <li><strong>+5 V Standby</strong> &rarr; f&uuml;r Bereitschaftsbetrieb (Wake-on-LAN)</li>
+        <li><strong>&minus;12 V</strong> &rarr; Serielle Schnittstellen (Restgr&ouml;&szlig;e)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Stecker &amp; Kabel</div>
+      <h3>G&auml;ngige Anschl&uuml;sse</h3>
+      <ul>
+        <li><strong>24-Pin ATX</strong> &rarr; Hauptstromversorgung Mainboard</li>
+        <li><strong>8-Pin EPS / CPU</strong> &rarr; Prozessorversorgung (+12 V)</li>
+        <li><strong>6/8-Pin PCIe</strong> &rarr; Grafikkarten (150&ndash;300 W)</li>
+        <li><strong>SATA-Stecker</strong> &rarr; Laufwerke (HDD, SSD, Optik)</li>
+        <li><strong>Molex</strong> &rarr; &auml;ltere Ger&auml;te, Geh&auml;usel&uuml;fter</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Wirkungsgrad &amp; 80 PLUS Zertifizierung</h3>
+  <div class="callout">
+    <strong>Formel Wirkungsgrad:</strong> &eta; = P<sub>aus</sub> / P<sub>ein</sub> &times; 100 %<br>
+    Beispiel: Netzteil nimmt 600 W auf, gibt 500 W ab &rarr; &eta; = 500 / 600 &times; 100 % = <strong>83,3 %</strong><br>
+    Die restlichen 16,7 % werden als W&auml;rme abgegeben.
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>80 PLUS Stufe</th><th>bei 20 % Last</th><th>bei 50 % Last</th><th>bei 100 % Last</th><th>Einordnung</th></tr></thead>
+      <tbody>
+        <tr><td class="td-k">Standard (White)</td><td>80 %</td><td>80 %</td><td>80 %</td><td>Mindeststandard</td></tr>
+        <tr><td class="td-k">Bronze</td><td>82 %</td><td>85 %</td><td>82 %</td><td>Einstieg Qualit&auml;t</td></tr>
+        <tr><td class="td-k">Silver</td><td>85 %</td><td>88 %</td><td>85 %</td><td>Mittelklasse</td></tr>
+        <tr><td class="td-k">Gold</td><td>87 %</td><td>90 %</td><td>87 %</td><td>Empfehlung Desktop</td></tr>
+        <tr><td class="td-k">Platinum</td><td>90 %</td><td>92 %</td><td>89 %</td><td>High-End</td></tr>
+        <tr><td class="td-k">Titanium</td><td>92 %</td><td>94 %</td><td>90 %</td><td>Maximum</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Schutzfunktionen</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">OVP &amp; UVP</div>
+      <h3>&Uuml;ber- &amp; Unterspannungsschutz</h3>
+      <ul>
+        <li><strong>OVP</strong> (Over Voltage Protection) &rarr; schaltet ab bei zu hoher Ausgangsspannung, sch&uuml;tzt CPU, GPU, Mainboard</li>
+        <li><strong>UVP</strong> (Under Voltage Protection) &rarr; schaltet ab bei zu niedriger Spannung, verhindert Systemabst&uuml;rze durch instabile Versorgung</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">OCP &amp; SCP</div>
+      <h3>Strom- &amp; Kurzschlussschutz</h3>
+      <ul>
+        <li><strong>OCP</strong> (Over Current Protection) &rarr; schaltet ab wenn zu viel Strom flie&szlig;t, sch&uuml;tzt Kabel und Bauteile vor &Uuml;berlast</li>
+        <li><strong>SCP</strong> (Short Circuit Protection) &rarr; erkennt Kurzschl&uuml;sse und schaltet sofort ab, verhindert Brand und Ger&auml;teschaden</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">OTP &amp; Bauform</div>
+      <h3>Temperaturschutz &amp; Geh&auml;use</h3>
+      <ul>
+        <li><strong>OTP</strong> (Over Temperature Protection) &rarr; schaltet ab bei zu hoher Innentemperatur, sch&uuml;tzt vor &Uuml;berhitzung und Brandgefahr</li>
+        <li><strong>ATX</strong> = Standardgr&ouml;&szlig;e | <strong>SFX</strong> = Kompakt | <strong>ITX</strong> = Sehr klein</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Typenschild</div>
+      <h3>Typenschildangaben</h3>
+      <ul>
+        <li>Gesamtleistung in Watt (z.B. 850 W)</li>
+        <li>Rail-Aufteilung aller Spannungsschienen</li>
+        <li>Max. Strom pro Spannung (z.B. 12 V / 70 A)</li>
+        <li>80 PLUS Zertifizierungsstufe</li>
+        <li>Input Voltage (z.B. 100&ndash;240 V AC)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Interaktiver Wirkungsgrad-Rechner</h3>
+  <div class="calc-box">
+    <div style="font-size:0.72rem;font-family:var(--mono);color:#888;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem;">Zwei Werte eingeben &mdash; dritten berechnen lassen</div>
+    <div class="calc-grid">
+      <div class="calc-field">
+        <label>P<sub>ein</sub> &mdash; Eingangsleistung [W]</label>
+        <input type="number" id="nt-pe" placeholder="z. B. 600" step="any" oninput="calcNT()">
+      </div>
+      <div class="calc-field">
+        <label>P<sub>aus</sub> &mdash; Ausgangsleistung [W]</label>
+        <input type="number" id="nt-pa" placeholder="z. B. 500" step="any" oninput="calcNT()">
+      </div>
+      <div class="calc-field">
+        <label>&eta; &mdash; Wirkungsgrad [%]</label>
+        <input type="number" id="nt-eta" placeholder="z. B. 90" step="any" oninput="calcNT()">
+      </div>
+    </div>
+    <div class="calc-result" id="nt-res">Bitte zwei Felder ausf&uuml;llen &hellip;</div>
+    <button class="btn-clear" onclick="clearNT()">Zur&uuml;cksetzen</button>
+  </div>
+
+  <h3 class="sub">5 &Uuml;bungsaufgaben Netzteile mit Schritt-f&uuml;r-Schritt-L&ouml;sung</h3>
+  <div id="aufgaben-nt"></div>
+
+</div>
+</div>
+
+<!-- ════════════════ MAINBOARD & CPU ════════════════ -->
+<div class="page" id="mainboard">
+<div class="container">
+  <div class="sec-head">
+    <h2>Mainboard &amp; CPU</h2>
+    <span class="sec-tag">CPU-Grundlagen &middot; Cache &middot; TDP &middot; Mainboard-Komponenten &middot; Bussysteme</span>
+  </div>
+
+  <h3 class="sub">CPU &mdash; Grundlagen &amp; Kenngr&ouml;&szlig;en</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Kerne &amp; Aufbau</div>
+      <h3>CPU-Kern</h3>
+      <ul>
+        <li>Ein Kern = eigenst&auml;ndige Recheneinheit im Prozessor</li>
+        <li>Mehr Kerne &rarr; mehr Aufgaben gleichzeitig (Multitasking)</li>
+        <li>Jeder Kern enth&auml;lt: <strong>ALU</strong> (Rechenwerk) + <strong>Steuerwerk</strong></li>
+        <li>Moderne CPUs: 4&ndash;24 Kerne (Desktop), bis 128 (Server)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Fertigungstechnik</div>
+      <h3>Herstellungsprozess (nm)</h3>
+      <ul>
+        <li>Strukturgr&ouml;&szlig;e des Chips in Nanometer (z.B. 7 nm, 5 nm)</li>
+        <li>Kleinere nm &rarr; mehr Transistoren auf gleicher Fl&auml;che</li>
+        <li>Kleinere nm &rarr; geringerer Stromverbrauch &amp; weniger W&auml;rme</li>
+        <li>Intel i9-12900K: 10 nm (Intel 7); i7-4790: 22 nm</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">W&auml;rme &amp; K&uuml;hlung</div>
+      <h3>TDP &mdash; Thermal Design Power</h3>
+      <ul>
+        <li>Typische W&auml;rmeabgabe der CPU unter Last in Watt</li>
+        <li>Wichtig f&uuml;r Auswahl des K&uuml;hlsystems</li>
+        <li>i9-12900K: TDP 125 W, max. 241 W (Turbo)</li>
+        <li>H&ouml;herer TDP &rarr; leistungsf&auml;higer K&uuml;hler erforderlich</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Datenrate &amp; iGPU</div>
+      <h3>Weitere Kenngr&ouml;&szlig;en</h3>
+      <ul>
+        <li><strong>Datenrate</strong> = Datenmenge/Sekunde zwischen CPU &amp; RAM (GB/s)</li>
+        <li>Intel i7-4790: max. 25,6 GB/s RAM-Datenrate</li>
+        <li><strong>iGPU</strong> = integrierte Grafikeinheit im Prozessor</li>
+        <li>Suffix <strong>F</strong> bei Intel = ohne iGPU (z.B. i9-12900KF)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">CPU-Namensgebung</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Intel-Schema</div>
+      <h3>Beispiel: Core i7-4790K</h3>
+      <ul>
+        <li><strong>i7</strong> = Leistungsklasse (i3 / i5 / i7 / i9)</li>
+        <li><strong>4</strong> = Generation (4. Gen, Haswell)</li>
+        <li><strong>790</strong> = Modellnummer</li>
+        <li><strong>K</strong> = &uuml;bertaktbar &nbsp;|&nbsp; <strong>T</strong> = energieeffizient &nbsp;|&nbsp; <strong>F</strong> = ohne iGPU</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">AMD-Schema</div>
+      <h3>Beispiel: Ryzen 7 7700X</h3>
+      <ul>
+        <li><strong>Ryzen</strong> = Markenlinie</li>
+        <li><strong>7</strong> = Leistungsklasse (3 / 5 / 7 / 9)</li>
+        <li><strong>7</strong>700 = Generation (Zen 4, 7000er-Reihe)</li>
+        <li><strong>X</strong> = High-Performance &nbsp;|&nbsp; <strong>G</strong> = mit iGPU</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">CPU-Cache</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Cache-Stufe</th><th>Zugriffszeit</th><th>Abstand zum Kern</th><th>Gr&ouml;&szlig;e (typisch)</th><th>Funktion</th></tr></thead>
+      <tbody>
+        <tr><td class="td-k">L1</td><td>~3 ns</td><td>Direkt am Kern</td><td>16&ndash;128 KB</td><td>Schnellster Puffer f&uuml;r aktuelle Befehle &amp; Daten</td></tr>
+        <tr><td class="td-k">L2</td><td>~5 ns</td><td>Nah am Kern</td><td>512 KB &ndash; 6 MB</td><td>Zweite Pufferstufe, gr&ouml;&szlig;er aber etwas langsamer</td></tr>
+        <tr><td class="td-k">L3</td><td>10&ndash;15 ns</td><td>Geteilt (alle Kerne)</td><td>bis ~32 MB</td><td>Gemeinsamer Pool aller Kerne, reduziert RAM-Zugriffe</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout">
+    <strong>Faustregel:</strong> Je n&auml;her der Cache am Kern, desto schneller aber auch kleiner. L1 &gt; L2 &gt; L3 nach Geschwindigkeit. L3 &gt; L2 &gt; L1 nach Kapazit&auml;t.
+  </div>
+
+  <h3 class="sub">Mainboard &mdash; Grundlagen &amp; Komponenten</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Funktion</div>
+      <h3>Was macht ein Mainboard?</h3>
+      <ul>
+        <li>Verbindet alle PC-Komponenten (CPU, RAM, GPU, Speicher)</li>
+        <li>Steuert Kommunikation &uuml;ber Bus-Systeme</li>
+        <li>Verteilt Stromversorgung an alle Komponenten</li>
+        <li><strong>Erste Wahl:</strong> Mainboard bestimmt CPU-Sockel, RAM-Typ und Slots</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Chipsatz</div>
+      <h3>Chipsatz &amp; Bus-Systeme</h3>
+      <ul>
+        <li><strong>AMD:</strong> FCH (Fusion Controller Hub)</li>
+        <li><strong>Intel:</strong> PCH (Platform Controller Hub)</li>
+        <li><strong>Datenbus</strong> &rarr; &uuml;bertr&auml;gt Daten</li>
+        <li><strong>Adressbus</strong> &rarr; bestimmt Speicheradresse</li>
+        <li><strong>Steuerbus</strong> &rarr; Kontrollsignale (lesen / schreiben)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub">Wichtige Mainboard-Komponenten im &Uuml;berblick</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Komponente</th><th>Aufgabe</th><th>Relevanz f&uuml;r PC-Build</th></tr></thead>
+      <tbody>
+        <tr><td class="td-k">CPU-Sockel</td><td>Aufnahme der CPU</td><td>Muss exakt zur CPU passen &mdash; AMD AM5, Intel LGA1700 usw.</td></tr>
+        <tr><td class="td-k">DIMM-Slots</td><td>RAM-Module (DDR4 oder DDR5)</td><td>Anzahl, Generation und max. Kapazit&auml;t bestimmt RAM-Auswahl</td></tr>
+        <tr><td class="td-k">PCIe x16-Slot</td><td>GPU, WLAN-Karte, Soundkarte</td><td>Hauptslot f&uuml;r Grafikkarte; PCIe-Version bestimmt Bandbreite</td></tr>
+        <tr><td class="td-k">M.2-Steckpl&auml;tze</td><td>NVMe-SSDs (PCIe 4.0 / 5.0)</td><td>Schnellster Speicheranschluss; Anzahl variiert je nach Board</td></tr>
+        <tr><td class="td-k">SATA-Ports</td><td>HDD, SATA-SSD, optische Laufwerke</td><td>Abw&auml;rtskompatibel; max. ~600 MB/s</td></tr>
+        <tr><td class="td-k">24-Pin ATX</td><td>Hauptstromversorgung vom Netzteil</td><td>Immer vorhanden; muss vollst&auml;ndig eingesteckt sein</td></tr>
+        <tr><td class="td-k">8-Pin EPS</td><td>CPU-Stromversorgung (+12 V)</td><td>Separat vom Netzteil verbinden; manche Boards ben&ouml;tigen 2&times; 8-Pin</td></tr>
+        <tr><td class="td-k">L&uuml;fter-Header</td><td>Anschluss f&uuml;r L&uuml;fter &amp; AIO-K&uuml;hler</td><td>Temperaturgesteuerte PWM-Regelung &uuml;ber BIOS</td></tr>
+        <tr><td class="td-k">System-Panel-Header</td><td>Power-Button, Reset, LEDs, Speaker</td><td>Verbindung zum Geh&auml;use-Frontend; Pinbelegung im Handbuch</td></tr>
+        <tr><td class="td-k">Diagnose-LEDs</td><td>POST-Fehlercodes anzeigen</td><td>Erleichtern Fehlersuche bei Boot-Problemen erheblich</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">5 &Uuml;bungsaufgaben Mainboard &amp; CPU mit Schritt-f&uuml;r-Schritt-L&ouml;sung</h3>
+  <div id="aufgaben-mb"></div>
+
+  <h3 class="sub">Was man im Mainboard-Datenblatt pr&uuml;fen muss</h3>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-tag">Kompatibilit&auml;t</div>
+      <h3>Vor dem Kauf pr&uuml;fen</h3>
+      <ul>
+        <li><strong>CPU-Sockel:</strong> AM5 / LGA1700 / LGA1851 &mdash; muss zur CPU passen</li>
+        <li><strong>RAM-Generation:</strong> DDR4 oder DDR5 &mdash; nicht mischbar</li>
+        <li><strong>Max. RAM-Kapazit&auml;t:</strong> abh&auml;ngig von Mainboard und CPU</li>
+        <li><strong>Unterst&uuml;tzte Taktraten:</strong> Basis + OC/EXPO/XMP</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Erweiterbarkeit</div>
+      <h3>Anschl&uuml;sse &amp; Slots</h3>
+      <ul>
+        <li><strong>PCIe-Version:</strong> Gen 4 oder Gen 5 bestimmt GPU-/M.2-Bandbreite</li>
+        <li><strong>Anzahl M.2-Slots:</strong> f&uuml;r NVMe-SSDs; auf PCIe-Version achten</li>
+        <li><strong>SATA-Ports:</strong> f&uuml;r HDDs und &auml;ltere SSDs</li>
+        <li><strong>USB-Anschl&uuml;sse:</strong> Typ und Geschwindigkeit (USB 2.0 bis 3.2)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">DIMM-Belegung</div>
+      <h3>Speicherslots korrekt nutzen</h3>
+      <ul>
+        <li><strong>1 Riegel:</strong> empfohlenen Slot laut Handbuch belegen (oft A2)</li>
+        <li><strong>2 Riegel:</strong> Dual-Channel-Slots gem&auml;&szlig; Handbuch (oft A2 + B2)</li>
+        <li><strong>4 Riegel:</strong> alle Slots bestücken</li>
+        <li>DDR5 und DDR4 sind <strong>nicht</strong> kompatibel &mdash; unterschiedliche Kerbe</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-tag">Formfaktoren</div>
+      <h3>G&auml;ngige Mainboard-Gr&ouml;&szlig;en</h3>
+      <ul>
+        <li><strong>ATX:</strong> 30,5 &times; 24,4 cm &mdash; Standardgr&ouml;&szlig;e, volle Ausstattung</li>
+        <li><strong>Micro-ATX:</strong> 24,4 &times; 24,4 cm &mdash; kompakter, weniger Slots</li>
+        <li><strong>Mini-ITX:</strong> 17 &times; 17 cm &mdash; sehr kompakt, begrenzte Erweiterung</li>
+        <li>Geh&auml;use muss zum Formfaktor passen</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Diagnose-LEDs beim Boot:</strong> Viele Mainboards haben Q-LEDs oder Diagnosecodes. Leuchtet eine LED dauerhaft w&auml;hrend des POST, deutet sie auf ein Problem der entsprechenden Komponente hin: CPU &rarr; rot, DRAM &rarr; gelb, GPU &rarr; wei&szlig;, Boot-Ger&auml;t &rarr; gelbgr&uuml;n. Genaue Codes stehen im jeweiligen Handbuch.
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════ FLASHCARDS ════════════════ -->
+<!-- ════════════════ FLASHCARDS ════════════════ -->
+<div class="page" id="fc">
+<div class="container">
+  <div class="sec-head">
+    <h2>Flashcards</h2>
+    <span class="sec-tag">Karte anklicken zum Umdrehen</span>
+  </div>
+  <div class="fc-wrap">
+    <div class="fc-progress" id="fc-prog"></div>
+    <div class="fc-scene" onclick="fcFlip()">
+      <div class="fc-card" id="fc-card">
+        <div class="fc-face">
+          <div class="fc-meta">Begriff</div>
+          <div class="fc-term" id="fc-t">DIMM</div>
+          <div class="fc-hint">Klicken zum Umdrehen</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-meta">Definition</div>
+          <div class="fc-def" id="fc-d"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn-n" onclick="fcPrev()">&larr; Zur&uuml;ck</button>
+      <span class="fc-count" id="fc-c">1 / 18</span>
+      <button class="btn-n" onclick="fcNext()">Weiter &rarr;</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ QUIZ ════════════════ -->
+<div class="page" id="quiz">
+<div class="container">
+  <div class="sec-head">
+    <h2>Quiz</h2>
+    <span class="sec-tag">42 Fragen aus allen Themenbereichen</span>
+  </div>
+  <div class="qwrap">
+    <div class="qbar" id="qbar"></div>
+    <div id="qcontent">
+      <div class="qcard">
+        <div class="qmeta" id="qnum">Frage 1 / 18</div>
+        <div class="qqtext" id="qtext"></div>
+        <div class="qopts" id="qopts"></div>
+        <div class="qfb" id="qfb"></div>
+        <button class="btn-next" id="qnext" onclick="nextQ()">N&auml;chste Frage &rarr;</button>
+      </div>
+    </div>
+    <div class="qresult" id="qresult">
+      <div class="res-label">Ergebnis</div>
+      <div class="res-frac" id="rscore"></div>
+      <div class="res-msg" id="rmsg"></div>
+      <button class="btn-restart" onclick="initQuiz()">Quiz wiederholen</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── TABS ──
+function showTab(id, btn) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── ACCORDION ──
+function togAcc(btn) { btn.parentElement.classList.toggle('open'); }
+
+// ── ELEKTRIK RECHNER ──
+function rnd(v) { return Math.round(v * 10000) / 10000; }
+
+function calcE() {
+  var uv = document.getElementById('cu').value;
+  var rv = document.getElementById('cr').value;
+  var iv = document.getElementById('ci').value;
+  var u = uv !== '' ? parseFloat(uv) : null;
+  var r = rv !== '' ? parseFloat(rv) : null;
+  var i = iv !== '' ? parseFloat(iv) : null;
+  var res = document.getElementById('cres');
+  var filled = [u, r, i].filter(function(x) { return x !== null; }).length;
+
+  if (filled < 2) {
+    res.className = 'calc-result';
+    res.textContent = 'Bitte zwei Felder ausf\u00fcllen \u2026';
+    return;
+  }
+
+  var lines = [];
+  if (u !== null && r !== null && i === null) {
+    var ci = u / r;
+    document.getElementById('ci').value = rnd(ci);
+    lines.push('I = U / R = ' + u + ' V / ' + r + ' \u03a9 = ' + rnd(ci) + ' A');
+    lines.push('P = U \u00b7 I = ' + u + ' V \u00b7 ' + rnd(ci) + ' A = ' + rnd(u * ci) + ' W');
+  } else if (u !== null && i !== null && r === null) {
+    var cr = u / i;
+    document.getElementById('cr').value = rnd(cr);
+    lines.push('R = U / I = ' + u + ' V / ' + i + ' A = ' + rnd(cr) + ' \u03a9');
+    lines.push('P = U \u00b7 I = ' + u + ' V \u00b7 ' + i + ' A = ' + rnd(u * i) + ' W');
+  } else if (r !== null && i !== null && u === null) {
+    var cu = r * i;
+    document.getElementById('cu').value = rnd(cu);
+    lines.push('U = R \u00b7 I = ' + r + ' \u03a9 \u00b7 ' + i + ' A = ' + rnd(cu) + ' V');
+    lines.push('P = U \u00b7 I = ' + rnd(cu) + ' V \u00b7 ' + i + ' A = ' + rnd(cu * i) + ' W');
+  } else if (u !== null && r !== null && i !== null) {
+    var check = rnd(u / r);
+    var ok = Math.abs(u / r - i) < 0.001;
+    lines.push('Alle 3 Werte gesetzt \u2014 \u00dcberpr\u00fcfung:');
+    lines.push('U / R = ' + check + ' A ' + (ok ? '\u2713 stimmt \u00fcberein' : '\u2260 ' + i + ' A (Widerspruch!)'));
+    lines.push('P = U \u00b7 I = ' + rnd(u * i) + ' W');
+  }
+
+  res.className = 'calc-result has-result';
+  res.innerHTML = lines.map(function(l) { return '<div>' + l + '</div>'; }).join('');
+}
+
+function clearCalc() {
+  ['cu', 'cr', 'ci'].forEach(function(id) { document.getElementById(id).value = ''; });
+  var res = document.getElementById('cres');
+  res.className = 'calc-result';
+  res.textContent = 'Bitte zwei Felder ausf\u00fcllen \u2026';
+}
+
+// ── ÜBUNGSAUFGABEN ──
+var AUFG = [
+  {
+    nr: 1, titel: 'PCIe-Slot Stromversorgung',
+    kontext: 'Ein PCIe x16-Slot versorgt eine eingebettete GPU direkt \u00fcber die Platine. Der Widerstand des Leitungswegs betr\u00e4gt 0,6 \u03a9. Die gemessene Spannung am Slot betr\u00e4gt 12 V.',
+    gegeben: [{s:'U', v:'12 V'}, {s:'R', v:'0,6 \u03a9'}],
+    gesucht: 'Stromst\u00e4rke I und Leistung P',
+    schritte: [
+      {f:'I = U / R', r:'I = 12 V / 0,6 \u03a9', e:'I = 20 A'},
+      {f:'P = U \u00b7 I', r:'P = 12 V \u00b7 20 A', e:'P = 240 W'}
+    ],
+    fazit: 'Der Slot liefert 20 A \u2014 das entspricht 240 W, was f\u00fcr eine High-End-GPU \u00fcber Zus\u00e4tzkabel typisch ist.'
+  },
+  {
+    nr: 2, titel: 'Netzteil-Schiene 12 V (i9-12900K)',
+    kontext: 'Ein 850-W-Netzteil betreibt die CPU \u00fcber die 12-V-Schiene. Der Prozessor nimmt dabei eine Leistung von 241 W auf.',
+    gegeben: [{s:'P', v:'241 W'}, {s:'U', v:'12 V'}],
+    gesucht: 'Stromst\u00e4rke I auf der 12-V-Schiene',
+    schritte: [
+      {f:'I = P / U', r:'I = 241 W / 12 V', e:'I \u2248 20,08 A'}
+    ],
+    fazit: 'Die 12-V-Schiene muss mindestens 20,1 A f\u00fcr die CPU bereitstellen. Das Netzteil muss diese Last dauerhaft liefern k\u00f6nnen.'
+  },
+  {
+    nr: 3, titel: 'USB-3.0-Port an einem Desktop-Mainboard',
+    kontext: 'Ein USB-3.0-Port an einem Desktop-Mainboard liefert standardm\u00e4\u00dfig 5 V. Der angeschlossene USB-Stick hat einen Innenwiderstand von 10 \u03a9.',
+    gegeben: [{s:'U', v:'5 V'}, {s:'R', v:'10 \u03a9'}],
+    gesucht: 'Stromst\u00e4rke I und Leistung P',
+    schritte: [
+      {f:'I = U / R', r:'I = 5 V / 10 \u03a9', e:'I = 0,5 A'},
+      {f:'P = U \u00b7 I', r:'P = 5 V \u00b7 0,5 A', e:'P = 2,5 W'}
+    ],
+    fazit: '0,5 A entspricht dem USB-3.0-Standard (max. 0,9 A). Die Leistungsaufnahme von 2,5 W ist f\u00fcr einen USB-Stick realistisch.'
+  },
+  {
+    nr: 4, titel: 'GPU-Versorgung \u2014 Leitungsverlust berechnen',
+    kontext: 'Eine Grafikkarte hat eine TGP von 160 W. Sie wird \u00fcber den 12-V-PCIe-Stromstecker versorgt. Der Widerstand des Versorgungspfades betr\u00e4gt 0,075 \u03a9.',
+    gegeben: [{s:'P', v:'160 W'}, {s:'U', v:'12 V'}, {s:'R', v:'0,075 \u03a9'}],
+    gesucht: 'Stromst\u00e4rke I und Spannungsabfall U\u2093\u1D47 auf der Leitung',
+    schritte: [
+      {f:'I = P / U', r:'I = 160 W / 12 V', e:'I \u2248 13,33 A'},
+      {f:'U\u2093\u1D47 = R \u00b7 I', r:'U\u2093\u1D47 = 0,075 \u03a9 \u00b7 13,33 A', e:'U\u2093\u1D47 \u2248 1,0 V'},
+      {f:'P\u2093\u1D47 = U\u2093\u1D47 \u00b7 I', r:'P\u2093\u1D47 = 1,0 V \u00b7 13,33 A', e:'P\u2093\u1D47 \u2248 13,3 W'}
+    ],
+    fazit: 'Bei 13,3 A f\u00e4llt \u00fcber den Leitungswiderstand ca. 1 V ab \u2014 ca. 13 W Verlustleistung. Guter Kabelquerschnitt ist wichtig!'
+  },
+  {
+    nr: 5, titel: 'Gesamtleistung eines PC-Systems aus der Steckdose',
+    kontext: 'Ein vollst\u00e4ndiges Workstation-System verbraucht im Last-Betrieb ca. 480 W. Es wird mit 230 V Netzspannung versorgt.',
+    gegeben: [{s:'P', v:'480 W'}, {s:'U', v:'230 V'}],
+    gesucht: 'Gesamtstromst\u00e4rke I und Systemwiderstand R',
+    schritte: [
+      {f:'I = P / U', r:'I = 480 W / 230 V', e:'I \u2248 2,09 A'},
+      {f:'R = U / I', r:'R = 230 V / 2,09 A', e:'R \u2248 110 \u03a9'}
+    ],
+    fazit: 'Das System zieht nur ca. 2,1 A aus der 230-V-Steckdose \u2014 weit unter dem Sicherungslimit von 16 A. Der Systemwiderstand ~110 \u03a9 repr\u00e4sentiert alle Verbraucher zusammen.'
+  }
+];
+
+function buildAufgaben() {
+  var c = document.getElementById('aufgaben');
+  c.innerHTML = AUFG.map(function(a, ai) {
+    var gegenDiv = a.gegeben.map(function(g) {
+      return '<div class="aufgabe-info-val"><span>' + g.s + '</span> = ' + g.v + '</div>';
+    }).join('');
+    var schritte = a.schritte.map(function(s) {
+      return '<div class="lsg-row"><div class="lsg-formel">' + s.f + '</div><div class="lsg-rechnung">' + s.r + '</div><div class="lsg-ergebnis">' + s.e + '</div></div>';
+    }).join('');
+    return '<div class="aufgabe-wrap">' +
+      '<div class="aufgabe-head" id="ah' + ai + '" onclick="togA(' + ai + ')">' +
+        '<div class="aufgabe-head-left">' +
+          '<span class="aufgabe-nr">Aufgabe ' + a.nr + '</span>' +
+          '<span class="aufgabe-titel">' + a.titel + '</span>' +
+        '</div>' +
+        '<span class="aufgabe-icon" id="ai' + ai + '">+</span>' +
+      '</div>' +
+      '<div class="aufgabe-body" id="ab' + ai + '">' +
+        '<div class="aufgabe-inner">' +
+          '<p class="aufgabe-kontext">' + a.kontext + '</p>' +
+          '<div class="aufgabe-info">' +
+            '<div class="aufgabe-info-cell"><div class="aufgabe-info-label">Gegeben</div>' + gegenDiv + '</div>' +
+            '<div class="aufgabe-info-cell"><div class="aufgabe-info-label">Gesucht</div><div class="aufgabe-info-val">' + a.gesucht + '</div></div>' +
+          '</div>' +
+          '<button class="btn-lsg" id="lb' + ai + '" onclick="showLsg(' + ai + ')">L\u00f6sung anzeigen</button>' +
+          '<div class="lsg-block" id="ls' + ai + '">' +
+            '<div class="lsg-label">Rechenweg</div>' +
+            schritte +
+            '<div class="lsg-fazit">' + a.fazit + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function togA(i) {
+  var body = document.getElementById('ab' + i);
+  var icon = document.getElementById('ai' + i);
+  var open = body.style.display !== 'block';
+  body.style.display = open ? 'block' : 'none';
+  icon.style.transform = open ? 'rotate(45deg)' : '';
+}
+
+function showLsg(i) {
+  document.getElementById('ls' + i).style.display = 'block';
+  document.getElementById('lb' + i).style.display = 'none';
+}
+
+buildAufgaben();
+
+// ── ENERGIEVERBRAUCH RECHNER ──
+function calcEnergy() {
+  var pv = document.getElementById('ep').value;
+  var tv = document.getElementById('et').value;
+  var prv = document.getElementById('epr').value;
+  var p = pv !== '' ? parseFloat(pv) : null;
+  var t = tv !== '' ? parseFloat(tv) : null;
+  var pr = prv !== '' ? parseFloat(prv) : 0.30;
+  var res = document.getElementById('eres');
+
+  if (p === null || t === null) {
+    res.className = 'calc-result';
+    res.textContent = 'Leistung und Zeit eingeben \u2026';
+    return;
+  }
+
+  var wh   = p * t;
+  var kwh  = wh / 1000;
+  var cost = kwh * pr;
+  var lines = [
+    'E = P \u00b7 t = ' + p + ' W \u00b7 ' + t + ' h = ' + rnd(wh) + ' Wh',
+    'E = ' + rnd(wh) + ' Wh / 1000 = ' + rnd(kwh) + ' kWh',
+    'Kosten = ' + rnd(kwh) + ' kWh \u00b7 ' + pr + ' \u20ac/kWh = ' + rnd(cost) + ' \u20ac'
+  ];
+  res.className = 'calc-result has-result';
+  res.innerHTML = lines.map(function(l) { return '<div>' + l + '</div>'; }).join('');
+}
+
+function clearEnergy() {
+  ['ep', 'et'].forEach(function(id) { document.getElementById(id).value = ''; });
+  document.getElementById('epr').value = '0.30';
+  var res = document.getElementById('eres');
+  res.className = 'calc-result';
+  res.textContent = 'Leistung und Zeit eingeben \u2026';
+}
+
+// ── ENERGIEAUFGABEN ──
+var AUFG_E = [
+  {
+    nr: 1, titel: 'T\u00e4glicher Stromverbrauch einer Workstation',
+    kontext: 'Eine Workstation nimmt unter Last 480 W auf. Sie l\u00e4uft einen typischen Arbeitstag lang (8 Stunden). Der Strompreis betr\u00e4gt 0,30 \u20ac/kWh.',
+    gegeben: [{s:'P', v:'480 W'}, {s:'t', v:'8 h'}, {s:'p', v:'0,30 \u20ac/kWh'}],
+    gesucht: 'Tagesverbrauch E in kWh und Tageskosten K',
+    schritte: [
+      {f:'E = P \u00b7 t', r:'E = 480 W \u00b7 8 h = 3840 Wh', e:'E = 3,84 kWh'},
+      {f:'K = E \u00b7 p', r:'K = 3,84 kWh \u00b7 0,30 \u20ac/kWh', e:'K = 1,15 \u20ac/Tag'}
+    ],
+    fazit: 'Eine einzelne Workstation kostet pro Arbeitstag ca. 1,15 \u20ac. Bei gr\u00f6\u00dferen Bet\u00fcckungen summiert sich das schnell zu einem relevanten Kostenposten.'
+  },
+  {
+    nr: 2, titel: 'Jahresstromkosten f\u00fcr mehrere Workstations',
+    kontext: 'Mehrere Workstations laufen an 220 Arbeitstagen pro Jahr jeweils 8 Stunden unter Volllast (480 W). Strompreis: 0,30 \u20ac/kWh.',
+    gegeben: [{s:'P', v:'480 W'}, {s:'t', v:'220 Tage \u00d7 8 h = 1760 h'}, {s:'n', v:'21 Ger\u00e4te'}, {s:'p', v:'0,30 \u20ac/kWh'}],
+    gesucht: 'Jahresenergieverbrauch E gesamt und Jahreskosten K',
+    schritte: [
+      {f:'E\u2081 = P \u00b7 t', r:'E\u2081 = 480 W \u00b7 1760 h = 844.800 Wh', e:'E\u2081 = 844,8 kWh/Ger\u00e4t'},
+      {f:'E\u209c = E\u2081 \u00b7 n', r:'E\u209c = 844,8 kWh \u00b7 21', e:'E\u209c = 17.740,8 kWh'},
+      {f:'K = E\u209c \u00b7 p', r:'K = 17.740,8 kWh \u00b7 0,30 \u20ac/kWh', e:'K = 5.322,24 \u20ac/Jahr'}
+    ],
+    fazit: 'Die reinen Stromkosten von 5.322 \u20ac/Jahr sind ein wichtiger Faktor bei der TCO-Bewertung (Total Cost of Ownership) neben den Anschaffungskosten von 94.127 \u20ac.'
+  },
+  {
+    nr: 3, titel: 'Standby-Verbrauch des Monitors',
+    kontext: 'Ein Monitor verbraucht im Standby 2 W. Er ist w\u00e4hrend der Nacht und am Wochenende 16 Stunden t\u00e4glich im Standby (365 Tage/Jahr). Strompreis: 0,30 \u20ac/kWh.',
+    gegeben: [{s:'P', v:'2 W'}, {s:'t', v:'16 h/Tag \u00d7 365 = 5840 h'}, {s:'p', v:'0,30 \u20ac/kWh'}],
+    gesucht: 'J\u00e4hrlicher Standby-Verbrauch E und Kosten K',
+    schritte: [
+      {f:'E = P \u00b7 t', r:'E = 2 W \u00b7 5840 h = 11.680 Wh', e:'E = 11,68 kWh/Jahr'},
+      {f:'K = E \u00b7 p', r:'K = 11,68 kWh \u00b7 0,30 \u20ac/kWh', e:'K = 3,50 \u20ac/Jahr'}
+    ],
+    fazit: '3,50 \u20ac pro Monitor klingt wenig, aber bei 21 Monitoren sind das 73,57 \u20ac/Jahr \u2014 allein f\u00fcr Standby. Konsequentes Abschalten lohnt sich.'
+  },
+  {
+    nr: 4, titel: 'Wie lange darf der Rechner laufen?',
+    kontext: 'Das Energiebudget eines B\u00fcros f\u00fcr einen PC betr\u00e4gt pro Monat maximal 20 kWh. Die Workstation nimmt 480 W auf.',
+    gegeben: [{s:'E', v:'20 kWh'}, {s:'P', v:'480 W'}],
+    gesucht: 'Maximale Betriebsstunden t pro Monat',
+    schritte: [
+      {f:'t = E / P', r:'t = 20.000 Wh / 480 W', e:'t \u2248 41,67 h/Monat'},
+      {f:'Tage = t / 8 h', r:'41,67 h / 8 h', e:'\u2248 5,2 Arbeitstage'}
+    ],
+    fazit: 'Bei einem Budget von 20 kWh/Monat kann die Workstation nur ca. 5 Arbeitstage im Volllastbetrieb laufen. Das Budget m\u00fcsste auf ~168 kWh/Monat erh\u00f6ht werden f\u00fcr Vollzeit-Betrieb.'
+  },
+  {
+    nr: 5, titel: 'Vergleich: HDD vs. SSD im Dauerbetrieb',
+    kontext: 'Eine alte HDD verbraucht 10 W, eine moderne NVMe-SSD nur 3 W. Beide laufen 2000 Stunden/Jahr. Strompreis: 0,30 \u20ac/kWh.',
+    gegeben: [{s:'P\u2095\u1D05\u1D05', v:'10 W'}, {s:'P\u209b\u209b\u1D05', v:'3 W'}, {s:'t', v:'2000 h/Jahr'}, {s:'p', v:'0,30 \u20ac/kWh'}],
+    gesucht: 'Energieverbrauch und Kosten beider Laufwerke sowie Einsparung',
+    schritte: [
+      {f:'E\u2095\u1D05\u1D05 = P \u00b7 t', r:'E\u2095\u1D05\u1D05 = 10 W \u00b7 2000 h = 20.000 Wh', e:'E\u2095\u1D05\u1D05 = 20 kWh'},
+      {f:'E\u209b\u209b\u1D05 = P \u00b7 t', r:'E\u209b\u209b\u1D05 = 3 W \u00b7 2000 h = 6000 Wh', e:'E\u209b\u209b\u1D05 = 6 kWh'},
+      {f:'\u0394E = E\u2095\u1D05\u1D05 \u2212 E\u209b\u209b\u1D05', r:'\u0394E = 20 \u2212 6 = 14 kWh', e:'Einsparung = 14 kWh/Jahr'},
+      {f:'\u0394K = \u0394E \u00b7 p', r:'\u0394K = 14 kWh \u00b7 0,30 \u20ac/kWh', e:'\u0394K = 4,20 \u20ac/Jahr'}
+    ],
+    fazit: 'Die SSD spart 14 kWh und 4,20 \u20ac pro Jahr gegen\u00fcber einer alten HDD. Bei gr\u00f6\u00dferen IT-Ausstattungen summiert sich die Einsparung erheblich \u2014 zus\u00e4tzlich zur deutlich h\u00f6heren Performance.'
+  }
+];
+
+function buildAufgabenE() {
+  var c = document.getElementById('aufgaben-e');
+  c.innerHTML = AUFG_E.map(function(a, ai) {
+    var gegenDiv = a.gegeben.map(function(g) {
+      return '<div class="aufgabe-info-val"><span>' + g.s + '</span> = ' + g.v + '</div>';
+    }).join('');
+    var schritte = a.schritte.map(function(s) {
+      return '<div class="lsg-row"><div class="lsg-formel">' + s.f + '</div><div class="lsg-rechnung">' + s.r + '</div><div class="lsg-ergebnis">' + s.e + '</div></div>';
+    }).join('');
+    var id = 'e' + ai;
+    return '<div class="aufgabe-wrap">' +
+      '<div class="aufgabe-head" onclick="togAE(' + ai + ')">' +
+        '<div class="aufgabe-head-left">' +
+          '<span class="aufgabe-nr">Aufgabe ' + a.nr + '</span>' +
+          '<span class="aufgabe-titel">' + a.titel + '</span>' +
+        '</div>' +
+        '<span class="aufgabe-icon" id="aei' + ai + '">+</span>' +
+      '</div>' +
+      '<div class="aufgabe-body" id="aeb' + ai + '">' +
+        '<div class="aufgabe-inner">' +
+          '<p class="aufgabe-kontext">' + a.kontext + '</p>' +
+          '<div class="aufgabe-info">' +
+            '<div class="aufgabe-info-cell"><div class="aufgabe-info-label">Gegeben</div>' + gegenDiv + '</div>' +
+            '<div class="aufgabe-info-cell"><div class="aufgabe-info-label">Gesucht</div><div class="aufgabe-info-val">' + a.gesucht + '</div></div>' +
+          '</div>' +
+          '<button class="btn-lsg" id="aelb' + ai + '" onclick="showLsgE(' + ai + ')">L\u00f6sung anzeigen</button>' +
+          '<div class="lsg-block" id="aels' + ai + '">' +
+            '<div class="lsg-label">Rechenweg</div>' +
+            schritte +
+            '<div class="lsg-fazit">' + a.fazit + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function togAE(i) {
+  var body = document.getElementById('aeb' + i);
+  var icon = document.getElementById('aei' + i);
+  var open = body.style.display !== 'block';
+  body.style.display = open ? 'block' : 'none';
+  icon.style.transform = open ? 'rotate(45deg)' : '';
+}
+
+function showLsgE(i) {
+  document.getElementById('aels' + i).style.display = 'block';
+  document.getElementById('aelb' + i).style.display = 'none';
+}
+
+buildAufgabenE();
+
+// ── NETZTEIL WIRKUNGSGRAD-RECHNER ──
+function calcNT() {
+  var pev = document.getElementById('nt-pe').value;
+  var pav = document.getElementById('nt-pa').value;
+  var etv = document.getElementById('nt-eta').value;
+  var pe  = pev !== '' ? parseFloat(pev) : null;
+  var pa  = pav !== '' ? parseFloat(pav) : null;
+  var eta = etv !== '' ? parseFloat(etv) : null;
+  var res = document.getElementById('nt-res');
+  var filled = [pe, pa, eta].filter(function(x){ return x !== null; }).length;
+  if (filled < 2) { res.className='calc-result'; res.textContent='Bitte zwei Felder ausf\u00fcllen \u2026'; return; }
+  var lines = [];
+  if (pe !== null && pa !== null && eta === null) {
+    var e = rnd(pa / pe * 100);
+    document.getElementById('nt-eta').value = e;
+    lines.push('\u03b7 = P\u2090\u1D64\u209b / P\u2091\u1D62\u2099 \u00d7 100 % = ' + pa + ' W / ' + pe + ' W \u00d7 100 %');
+    lines.push('\u03b7 = ' + e + ' %');
+    lines.push('Verlustleistung = ' + rnd(pe - pa) + ' W (' + rnd(100 - e) + ' % W\u00e4rme)');
+  } else if (pe !== null && eta !== null && pa === null) {
+    var pao = rnd(pe * eta / 100);
+    document.getElementById('nt-pa').value = pao;
+    lines.push('P\u2090\u1D64\u209b = P\u2091\u1D62\u2099 \u00d7 \u03b7 / 100 = ' + pe + ' W \u00d7 ' + eta + ' / 100');
+    lines.push('P\u2090\u1D64\u209b = ' + pao + ' W');
+    lines.push('Verlustleistung = ' + rnd(pe - pao) + ' W');
+  } else if (pa !== null && eta !== null && pe === null) {
+    var peo = rnd(pa / (eta / 100));
+    document.getElementById('nt-pe').value = peo;
+    lines.push('P\u2091\u1D62\u2099 = P\u2090\u1D64\u209b / (\u03b7 / 100) = ' + pa + ' W / ' + rnd(eta/100));
+    lines.push('P\u2091\u1D62\u2099 = ' + peo + ' W');
+    lines.push('Verlustleistung = ' + rnd(peo - pa) + ' W');
+  } else {
+    var chk = rnd(pa / pe * 100);
+    lines.push('Alle 3 Werte gesetzt \u2014 \u00dcberpr\u00fcfung:');
+    lines.push('P\u2090\u1D64\u209b / P\u2091\u1D62\u2099 \u00d7 100 = ' + chk + ' % ' + (Math.abs(chk - eta) < 0.1 ? '\u2713 stimmt \u00fcberein' : '\u2260 ' + eta + ' % (Widerspruch!)'));
+  }
+  res.className = 'calc-result has-result';
+  res.innerHTML = lines.map(function(l){ return '<div>' + l + '</div>'; }).join('');
+}
+function clearNT() {
+  ['nt-pe','nt-pa','nt-eta'].forEach(function(id){ document.getElementById(id).value=''; });
+  var res = document.getElementById('nt-res');
+  res.className='calc-result'; res.textContent='Bitte zwei Felder ausf\u00fcllen \u2026';
+}
+
+// ── NETZTEIL AUFGABEN ──
+var AUFG_NT = [
+  {
+    nr:1, titel:'Wirkungsgrad eines Gold-zertifizierten Netzteils',
+    kontext:'Ein Gold-zertifiziertes 850-W-Netzteil (90 % bei 50 % Last) l\u00e4uft unter mittlerer Last und nimmt 480 W aus der Steckdose auf.',
+    gegeben:[{s:'P\u2091\u1D62\u2099', v:'480 W'},{s:'\u03b7', v:'90 %'}],
+    gesucht:'Abgegebene Nutzleistung P\u2090\u1D64\u209b und Verlustleistung P\u1D5B',
+    schritte:[
+      {f:'P\u2090\u1D64\u209b = P\u2091\u1D62\u2099 \u00d7 \u03b7 / 100', r:'P\u2090\u1D64\u209b = 480 W \u00d7 90 / 100', e:'P\u2090\u1D64\u209b = 432 W'},
+      {f:'P\u1D5B = P\u2091\u1D62\u2099 \u2212 P\u2090\u1D64\u209b', r:'P\u1D5B = 480 W \u2212 432 W', e:'P\u1D5B = 48 W (W\u00e4rme)'}
+    ],
+    fazit:'Bei 90 % Wirkungsgrad gehen 48 W als W\u00e4rme verloren. Das Netzteil muss diese W\u00e4rme per L\u00fcfter abf\u00fchren. Ein schlechteres Netzteil (80 %) h\u00e4tte 96 W Verlust \u2014 doppelt so viel.'
+  },
+  {
+    nr:2, titel:'Netzteil-Auslegung f\u00fcr eine Workstation',
+    kontext:'Die Workstation verbraucht unter Volllast: CPU 241 W + GPU 160 W + Rest (Mainboard, RAM, SSD, L\u00fcfter) 80 W = 481 W Systemlast. Das Netzteil hat einen Wirkungsgrad von 87 % bei dieser Last.',
+    gegeben:[{s:'P\u209b\u1D67\u209b\u209c\u2091\u1D6A', v:'481 W'},{s:'\u03b7', v:'87 %'}],
+    gesucht:'Ben\u00f6tigte Eingangsleistung P\u2091\u1D62\u2099 vom Netz und ob 850 W ausreicht',
+    schritte:[
+      {f:'P\u2091\u1D62\u2099 = P\u2090\u1D64\u209b / (\u03b7 / 100)', r:'P\u2091\u1D62\u2099 = 481 W / 0,87', e:'P\u2091\u1D62\u2099 \u2248 553 W'},
+      {f:'Reserve = P\u2099\u2090\u2093 \u2212 P\u2090\u1D64\u209b', r:'Reserve = 850 W \u2212 481 W', e:'Reserve = 369 W (44 %)'}
+    ],
+    fazit:'Das 850-W-Netzteil arbeitet bei dieser Last im optimalen Bereich (~57 % Last). Der Wirkungsgrad ist dort am h\u00f6chsten. Die Reserve von 369 W erm\u00f6glicht zus\u00e4tzliche Erweiterungen.'
+  },
+  {
+    nr:3, titel:'Strombedarf auf der 12-V-Schiene berechnen',
+    kontext:'Das Netzteil liefert auf der +12-V-Schiene maximal 70 A. GPU (160 W) und CPU (241 W) werden beide \u00fcber die 12-V-Schiene versorgt.',
+    gegeben:[{s:'P\u1D66\u1D56\u1D41', v:'160 W'},{s:'P\u1D49\u1D56\u1D41', v:'241 W'},{s:'U', v:'12 V'}],
+    gesucht:'Gesamtstrom I auf der 12-V-Schiene und ob das Limit \u00fcberschritten wird',
+    schritte:[
+      {f:'P\u1D66\u2091\u209b = P\u1D66\u1D56\u1D41 + P\u1D49\u1D56\u1D41', r:'P\u1D66\u2091\u209b = 160 + 241 = 401 W', e:'P\u1D66\u2091\u209b = 401 W'},
+      {f:'I = P / U', r:'I = 401 W / 12 V', e:'I \u2248 33,4 A'},
+      {f:'Limit-Pr\u00fcfung', r:'33,4 A < 70 A', e:'\u2713 Sicher (48 % des Limits)'}
+    ],
+    fazit:'Die 12-V-Schiene wird mit 33,4 A belastet \u2014 weit unter dem Maximum von 70 A. Das Netzteil ist f\u00fcr diese Konfiguration deutlich \u00fcberdimensioniert, was die Lebensdauer verl\u00e4ngert.'
+  },
+  {
+    nr:4, titel:'Vergleich Bronze vs. Gold \u2014 Jahreskosten',
+    kontext:'Ein Bronze-Netzteil (85 % Wirkungsgrad) vs. Gold-Netzteil (90 %) bei gleicher Systemlast von 400 W Nutzleistung. Betrieb: 1760 h/Jahr. Strompreis: 0,30 \u20ac/kWh.',
+    gegeben:[{s:'P\u2090\u1D64\u209b', v:'400 W'},{s:'\u03b7\u1D03', v:'85 %'},{s:'\u03b7\u1D4D', v:'90 %'},{s:'t', v:'1760 h'},{s:'p', v:'0,30 \u20ac/kWh'}],
+    gesucht:'Jahresenergieverbrauch und Kosten beider Netzteile sowie Einsparung durch Gold',
+    schritte:[
+      {f:'P\u2091\u1D62\u2099,B = P\u2090\u1D64\u209b / \u03b7\u1D03', r:'P\u2091\u1D62\u2099,B = 400 / 0,85', e:'P\u2091\u1D62\u2099,B \u2248 470,6 W'},
+      {f:'P\u2091\u1D62\u2099,G = P\u2090\u1D64\u209b / \u03b7\u1D4D', r:'P\u2091\u1D62\u2099,G = 400 / 0,90', e:'P\u2091\u1D62\u2099,G \u2248 444,4 W'},
+      {f:'\u0394E = (P\u2091\u1D62\u2099,B \u2212 P\u2091\u1D62\u2099,G) \u00d7 t / 1000', r:'\u0394E = 26,2 W \u00d7 1760 h / 1000', e:'\u0394E \u2248 46,1 kWh/Jahr'},
+      {f:'\u0394K = \u0394E \u00d7 p', r:'\u0394K = 46,1 \u00d7 0,30 \u20ac', e:'\u0394K \u2248 13,83 \u20ac/Jahr/Ger\u00e4t'}
+    ],
+    fazit:'Jedes Gold-Netzteil spart ~13,83 \u20ac/Jahr gegen\u00fcber Bronze. Bei gr\u00f6\u00dferen IT-Ausstattungen summiert sich die Einsparung erheblich \u2014 ein Gold-Netzteil amortisiert sich meist nach 1\u20132 Jahren.'
+  },
+  {
+    nr:5, titel:'Welches Netzteil ist ausreichend?',
+    kontext:'Ein Techniker plant eine Workstation mit: CPU 125 W TDP, GPU 300 W TGP, Mainboard + RAM 50 W, SSD + L\u00fcfter 30 W. Das geplante Netzteil hat 650 W und Gold-Zertifizierung (90 %).',
+    gegeben:[{s:'P\u2090\u1D64\u209b,ges', v:'125+300+50+30 = 505 W'},{s:'P\u2099\u2090\u2093', v:'650 W'},{s:'\u03b7', v:'90 %'}],
+    gesucht:'Ist das 650-W-Netzteil ausreichend? Wie hoch ist die Auslastung?',
+    schritte:[
+      {f:'P\u2091\u1D62\u2099 = P\u2090\u1D64\u209b / \u03b7', r:'P\u2091\u1D62\u2099 = 505 / 0,90', e:'P\u2091\u1D62\u2099 \u2248 561 W'},
+      {f:'Auslastung = P\u2090\u1D64\u209b / P\u2099\u2090\u2093 \u00d7 100', r:'Auslastung = 505 / 650 \u00d7 100', e:'Auslastung \u2248 77,7 %'},
+      {f:'Reserve = P\u2099\u2090\u2093 \u2212 P\u2090\u1D64\u209b', r:'650 \u2212 505 = 145 W', e:'Reserve = 145 W'}
+    ],
+    fazit:'Das 650-W-Netzteil ist mit 77,7 % Auslastung leicht zu hoch dimensioniert f\u00fcr optimalen Wirkungsgrad (Ideal: 50\u201370 %). Es funktioniert, aber ein 750-W-Netzteil w\u00e4re f\u00fcr langfristig bessere Effizienz empfehlenswert.'
+  }
+];
+
+// ── MAINBOARD & CPU AUFGABEN ──
+var AUFG_MB = [
+  {
+    nr:1, titel:'CPU-Auswahl nach Sockel und Kompatibilit\u00e4t',
+    kontext:'Ein Kunde kauft ein AMD-Mainboard mit AM5-Sockel und DDR5-Unterst\u00fctzung. Er fragt, ob der Intel Core i9-12900K kompatibel ist, und welche CPU-Generation passt.',
+    gegeben:[{s:'Mainboard', v:'AM5-Sockel (AMD)'},{s:'RAM', v:'DDR5'},{s:'Geplante CPU', v:'Intel i9-12900K (LGA1700)'}],
+    gesucht:'Ist der i9-12900K kompatibel? Welche CPU-Generation passt?',
+    schritte:[
+      {f:'Sockel-Pr\u00fcfung', r:'AM5 = AMD-Sockel. Intel i9-12900K ben\u00f6tigt LGA1700.', e:'Nicht kompatibel'},
+      {f:'Passende CPU', r:'AM5-Sockel \u2192 AMD Ryzen 7000-Serie (Zen 4)', e:'z.B. Ryzen 9 7900X'},
+      {f:'RAM-Pr\u00fcfung', r:'AM5-Mainboards unterst\u00fctzen DDR5, nicht DDR4', e:'DDR5 erforderlich'}
+    ],
+    fazit:'Erst das Mainboard w\u00e4hlen, dann die CPU \u2014 der Sockel ist der entscheidende Faktor. Der Intel i9-12900K ist f\u00fcr AM5 nicht geeignet. AMD Ryzen 7000 (AM5) und DDR5-RAM sind die richtigen Komponenten.'
+  },
+  {
+    nr:2, titel:'Cache-Zugriffszeiten vergleichen',
+    kontext:'Die CPU f\u00fchrt eine Berechnung durch und muss Daten abrufen. Der L1-Cache hat die Daten nicht (Miss). Vergleiche die Latenz: L1 vs. L2 vs. L3 vs. Hauptspeicher (RAM, ~60 ns).',
+    gegeben:[{s:'L1', v:'~3 ns'},{s:'L2', v:'~5 ns'},{s:'L3', v:'~12 ns'},{s:'RAM', v:'~60 ns'}],
+    gesucht:'Faktor: Wie viel langsamer ist RAM gegen\u00fcber L1?',
+    schritte:[
+      {f:'Faktor L1 \u2192 L2', r:'5 ns / 3 ns', e:'\u2248 1,7\u00d7 langsamer'},
+      {f:'Faktor L1 \u2192 L3', r:'12 ns / 3 ns', e:'4\u00d7 langsamer'},
+      {f:'Faktor L1 \u2192 RAM', r:'60 ns / 3 ns', e:'20\u00d7 langsamer'}
+    ],
+    fazit:'RAM ist 20-mal langsamer als der L1-Cache. Deshalb ist gro\u00dfer L3-Cache (z.B. AMD 3D V-Cache) ein erheblicher Performance-Vorteil bei cache-sensitiven Anwendungen wie Simulationen.'
+  },
+  {
+    nr:3, titel:'TDP und K\u00fchler-Auswahl f\u00fcr den i9-12900K',
+    kontext:'Der Intel Core i9-12900K hat eine Basis-TDP von 125 W, kann unter Turbo-Last aber bis zu 241 W aufnehmen. Der verwendete K\u00fchler ist f\u00fcr bis zu 250 W ausgelegt.',
+    gegeben:[{s:'TDP Basis', v:'125 W'},{s:'TDP Max (Turbo)', v:'241 W'},{s:'K\u00fchler-TDP', v:'250 W'}],
+    gesucht:'Ist der K\u00fchler ausreichend? Berechne die thermische Reserve.',
+    schritte:[
+      {f:'Reserve = K\u00fchler-TDP \u2212 CPU-TDP\u1D50\u1D43\u02e3', r:'250 W \u2212 241 W', e:'Reserve = 9 W'},
+      {f:'Sicherheits-Pr\u00fcfung', r:'241 W \u2264 250 W', e:'\u2713 K\u00fchler ausreichend (knapp)'}
+    ],
+    fazit:'Mit nur 9 W Reserve ist der K\u00fchler f\u00fcr dauerhaften Turbo-Betrieb gerade ausreichend. F\u00fcr Dauerlast-Betrieb empfiehlt sich ein leistungsst\u00e4rkerer K\u00fchler mit mindestens 280 W oder eine AIO-Wasserk\u00fchlung.'
+  },
+  {
+    nr:4, titel:'RAM-Datenrate und Bandbreite',
+    kontext:'Der Intel i7-4790 (Referenz aus den Lernzetteln) hat eine maximale RAM-Datenrate von 25,6 GB/s. Der Ryzen 9 7900X mit DDR5-5600 im Dual-Channel erreicht ca. 89,6 GB/s.',
+    gegeben:[{s:'Datenrate i7-4790', v:'25,6 GB/s'},{s:'Datenrate R9 7900X', v:'89,6 GB/s'}],
+    gesucht:'Faktor der Bandbreitenverbesserung und Bedeutung f\u00fcr Simulationsanwendungen',
+    schritte:[
+      {f:'Faktor = Neu / Alt', r:'89,6 GB/s / 25,6 GB/s', e:'Faktor \u2248 3,5\u00d7'},
+      {f:'Bedeutung f\u00fcr Simulation', r:'Simulationssoftware l\u00e4dt gro\u00dfe Matrizen \u2192 RAM-limitiert', e:'3,5\u00d7 h\u00f6here Bandbreite = k\u00fcrzere Simulationszeit'}
+    ],
+    fazit:'F\u00fcr Simulationsanwendungen (FEA, CFD) ist die RAM-Bandbreite ein kritischer Flaschenhals. Der Ryzen 9 7900X mit DDR5 bietet 3,5-fach mehr Bandbreite als ein System mit DDR4-1600 \u2014 ein bedeutender Vorteil.'
+  },
+  {
+    nr:5, titel:'Speicherslots korrekt belegen',
+    kontext:'Ein Techniker verbaut 2\u00d7 32 GB DDR5-5600 in einem ATX-Mainboard mit 4 DIMM-Slots (A1, A2, B1, B2). Er fragt, in welche Slots die Riegel geh\u00f6ren und was passiert, wenn er A1+B1 statt A2+B2 verwendet.',
+    gegeben:[{s:'Mainboard', v:'ATX, 4 DIMM-Slots'},{s:'RAM', v:'2\u00d7 32 GB DDR5'},{s:'Empfehlung Hersteller', v:'Slots A2 + B2'}],
+    gesucht:'Korrekte Slot-Belegung und Konsequenz bei falscher Belegung',
+    schritte:[
+      {f:'Korrekte Belegung', r:'Immer A2 und B2 bei 2 Riegeln (Herstellerempfehlung)', e:'Dual-Channel aktiv = max. Bandbreite'},
+      {f:'Falsche Belegung (A1+B1)', r:'System startet, aber kein optimaler Dual-Channel', e:'Bis zu 30 % weniger Bandbreite'},
+      {f:'Falsche Belegung (A1+A2)', r:'Single-Channel oder kein Boot', e:'System instabil oder kein POST'}
+    ],
+    fazit:'Die Slot-Belegung hat direkten Einfluss auf die RAM-Bandbreite. Standardempfehlung bei 2 Riegeln: A2 + B2 f\u00fcr Dual-Channel. Der Unterschied betr\u00e4gt bis zu 30 % Speicherbandbreite \u2014 immer das Handbuch des jeweiligen Mainboards konsultieren.'
+  }
+];
+
+// ── GENERISCHE AUFGABEN-RENDER-FUNKTION ──
+function buildAufgabenGeneric(containerId, aufgabenArr, prefix) {
+  var c = document.getElementById(containerId);
+  c.innerHTML = aufgabenArr.map(function(a, ai) {
+    var gegenDiv = a.gegeben.map(function(g) {
+      return '<div class="aufgabe-info-val"><span>' + g.s + '</span> = ' + g.v + '</div>';
+    }).join('');
+    var schritte = a.schritte.map(function(s) {
+      return '<div class="lsg-row"><div class="lsg-formel">' + s.f + '</div><div class="lsg-rechnung">' + s.r + '</div><div class="lsg-ergebnis">' + s.e + '</div></div>';
+    }).join('');
+    return '<div class="aufgabe-wrap">' +
+      '<div class="aufgabe-head" onclick="togGen(\'' + prefix + '\',' + ai + ')">' +
+        '<div class="aufgabe-head-left">' +
+          '<span class="aufgabe-nr">Aufgabe ' + a.nr + '</span>' +
+          '<span class="aufgabe-titel">' + a.titel + '</span>' +
+        '</div>' +
+        '<span class="aufgabe-icon" id="' + prefix + 'i' + ai + '">+</span>' +
+      '</div>' +
+      '<div class="aufgabe-body" id="' + prefix + 'b' + ai + '">' +
+        '<div class="aufgabe-inner">' +
+          '<p class="aufgabe-kontext">' + a.kontext + '</p>' +
+          '<div class="aufgabe-info">' +
+            '<div class="aufgabe-info-cell"><div class="aufgabe-info-label">Gegeben</div>' + gegenDiv + '</div>' +
+            '<div class="aufgabe-info-cell"><div class="aufgabe-info-label">Gesucht</div><div class="aufgabe-info-val">' + a.gesucht + '</div></div>' +
+          '</div>' +
+          '<button class="btn-lsg" id="' + prefix + 'lb' + ai + '" onclick="showLsgGen(\'' + prefix + '\',' + ai + ')">L\u00f6sung anzeigen</button>' +
+          '<div class="lsg-block" id="' + prefix + 'ls' + ai + '">' +
+            '<div class="lsg-label">Rechenweg</div>' + schritte +
+            '<div class="lsg-fazit">' + a.fazit + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function togGen(p, i) {
+  var body = document.getElementById(p + 'b' + i);
+  var icon = document.getElementById(p + 'i' + i);
+  var open = body.style.display !== 'block';
+  body.style.display = open ? 'block' : 'none';
+  icon.style.transform = open ? 'rotate(45deg)' : '';
+}
+
+function showLsgGen(p, i) {
+  document.getElementById(p + 'ls' + i).style.display = 'block';
+  document.getElementById(p + 'lb' + i).style.display = 'none';
+}
+
+buildAufgabenGeneric('aufgaben-nt', AUFG_NT, 'nt');
+buildAufgabenGeneric('aufgaben-mb', AUFG_MB, 'mb');
+
+
+
+
+var FC = [
+  {t:'DIMM', d:'Dual Inline Memory Module \u2013 Bauform des RAM-Riegels f\u00fcr Desktop-PCs. L\u00e4sst auf die Speichergeneration schlie\u00dfen (DDR4, DDR5).'},
+  {t:'Dual-Channel', d:'Zwei parallele Speicherkan\u00e4le f\u00fcr h\u00f6here Speicherbandbreite. Bei 2 Riegeln immer Slots A2 + B2 best\u00fccken.'},
+  {t:'CAS-Latenz (CL)', d:'Anzahl der Taktzyklen zwischen Leseanforderung und Datenvef\u00fcgbarkeit. Niedrigerer Wert = schnellerer Speicherzugriff.'},
+  {t:'ECC', d:'Error Correcting Code \u2013 Speicher mit automatischer 1-Bit-Fehlerkorrektur. Bei DDR5 als On-Die ECC direkt im Modul integriert.'},
+  {t:'SPD', d:'Serial Presence Detect \u2013 Chip im RAM-Modul, der Spezifikationen (Kapazit\u00e4t, Takt, Timings) beim POST an das BIOS \u00fcbermittelt.'},
+  {t:'QVL-Liste', d:'Qualified Vendor List \u2013 Kompatibilit\u00e4tsliste des Mainboard-Herstellers mit offiziell getesteten RAM-Kits.'},
+  {t:'EXPO / XMP', d:'Overclocking-Profile f\u00fcr RAM. AMD EXPO = Extended Profiles for Overclocking. Intel XMP ist das \u00c4quivalent.'},
+  {t:'APU', d:'Accelerated Processing Unit \u2013 Grafikchip direkt in die CPU integriert. Keine separate Grafikkarte erforderlich.'},
+  {t:'GDDR', d:'Graphics DDR \u2013 speziell f\u00fcr GPUs optimierter Videospeicher mit besonders hoher Taktrate.'},
+  {t:'Rendering', d:'Prozess, bei dem 3D-Szenen in anzeigbare 2D-Bilder umgewandelt werden. Kernaufgabe der GPU.'},
+  {t:'Raytracing', d:'Simulationsverfahren f\u00fcr physikalisch korrekte Lichtdarstellung. Berechnet Lichtstrahlen f\u00fcr realistische Spiegelungen und Schatten.'},
+  {t:'TGP', d:'Total Graphics Power \u2013 Gesamtleistungsaufnahme der Grafikkarte. Wichtig f\u00fcr die Netzteilauswahl.'},
+  {t:'SATA', d:'Serial ATA \u2013 Interne Schnittstelle f\u00fcr HDDs und SSDs. Standard-Anschluss in Desktop-PCs, max. ~600 MB/s.'},
+  {t:'Skonto', d:'Preisnachlass bei Zahlung innerhalb einer definierten Frist. Beispiel: 2 % bei Zahlung binnen 14 Tagen.'},
+  {t:'HDD-Geometrie', d:'5 Dimensionen: Seiten \u2013 Spuren/Tracks \u2013 Zylinder \u2013 Bl\u00f6cke \u2013 Sektoren. Ergeben ein Koordinatensystem zur eindeutigen Adressierung jedes Blocks.'},
+  {t:'PCIe', d:'Peripheral Component Interconnect Express \u2013 Hochgeschwindigkeits-Bus im Mainboard f\u00fcr GPU, NVMe-SSDs und andere Erweiterungskarten.'},
+  {t:'Ohmsches Gesetz', d:'U = R \u00b7 I \u2014 Spannung (V) ist gleich Widerstand (\u03a9) mal Stromst\u00e4rke (A). Grundgesetz der Elektrotechnik.'},
+  {t:'Elektrische Leistung', d:'P = U \u00b7 I \u2014 Leistung in Watt ist gleich Spannung mal Strom. Gibt die pro Sekunde umgesetzte elektrische Energie an.'},
+  {t:'Elektrische Energie E', d:'E = P \u00b7 t \u2014 Energie in Wattstunden (Wh) ist gleich Leistung (W) mal Zeit (h). 1 kWh = 1000 Wh.'},
+  {t:'Kilowattstunde (kWh)', d:'Handels\u00fcbliche Einheit f\u00fcr Energie. 1 kWh = 1000 W \u00b7 1 h. Der Strompreis in Deutschland betr\u00e4gt ca. 0,30 \u20ac/kWh (2025).'},
+  {t:'Stromkosten berechnen', d:'K = E \u00b7 p. Kosten [\u20ac] = Verbrauch [kWh] \u00d7 Strompreis [\u20ac/kWh]. Beispiel: 3,84 kWh \u00d7 0,30 \u20ac = 1,15 \u20ac/Tag.'},
+  {t:'TCO', d:'Total Cost of Ownership \u2014 Gesamtkosten eines Ger\u00e4ts \u00fcber seine Lebensdauer: Anschaffung + Betrieb (Strom, Wartung) + Entsorgung.'},
+  {t:'AC / DC', d:'AC = Alternating Current (Wechselstrom, 230 V aus Steckdose). DC = Direct Current (Gleichstrom f\u00fcr Bauteile). Das Netzteil wandelt AC \u2192 DC.'},
+  {t:'Wirkungsgrad (\u03b7)', d:'\u03b7 = P\u2090\u1D64\u209b / P\u2091\u1D62\u2099 \u00d7 100 %. Anteil der nutzbaren Ausgangsleistung. Rest wird als W\u00e4rme abgegeben.'},
+  {t:'80 PLUS Gold', d:'Zertifizierung f\u00fcr Netzteile mit \u226587 % Wirkungsgrad bei 20 %/100 % Last und \u226590 % bei 50 % Last. Empfehlung f\u00fcr Desktop-PCs.'},
+  {t:'OVP', d:'Over Voltage Protection \u2014 Schutzschaltung des Netzteils. Schaltet bei zu hoher Ausgangsspannung ab, sch\u00fctzt CPU, GPU und Mainboard.'},
+  {t:'SCP', d:'Short Circuit Protection \u2014 Erkennt Kurzschl\u00fcsse und schaltet das Netzteil sofort ab. Verhindert Brand und Ger\u00e4teschaden.'},
+  {t:'24-Pin ATX', d:'Hauptstromversorgungsstecker des Netzteils zum Mainboard. Pflichtanschluss \u2014 ohne diesen Stecker startet kein System.'},
+  {t:'TDP', d:'Thermal Design Power \u2014 typische W\u00e4rmeabgabe der CPU unter Last in Watt. Bestimmt die Mindestanforderung an das K\u00fchlsystem.'},
+  {t:'CPU-Kern', d:'Eigenst\u00e4ndige Recheneinheit im Prozessor mit ALU (Rechenwerk) und Steuerwerk. Mehr Kerne = mehr parallele Aufgaben m\u00f6glich.'},
+  {t:'L1 / L2 / L3 Cache', d:'Schnelle Zwischenspeicher direkt in der CPU. L1 ~3 ns (kleinster, schnellster), L2 ~5 ns, L3 ~12 ns (gr\u00f6\u00dfter, gemeinsam). RAM: ~60 ns.'},
+  {t:'Chipsatz (FCH/PCH)', d:'Steuert die Kommunikation zwischen CPU, RAM, Peripherie. AMD: FCH (Fusion Controller Hub), Intel: PCH (Platform Controller Hub).'},
+  {t:'CPU-Sockel AM5', d:'AMD-Sockel f\u00fcr Ryzen 7000-Serie (Zen 4). Inkompatibel mit Intel-CPUs. Mainboard-Sockel und CPU m\u00fcssen \u00fcbereinstimmen.'},
+  {t:'Q-Code-LED / Diagnose-LEDs', d:'2-stellige Hex-Fehlercode-Anzeige auf Mainboards. Zeigt POST-Status an: rot = CPU, gelb = DRAM, wei\u00df = GPU, gelbgr\u00fcn = Boot-Ger\u00e4t. Genaue Codes im jeweiligen Handbuch.'},
+  {t:'Offene Frage', d:'Fragetechnik im Verkaufsgespr\u00e4ch. Antwort ist informativ, der Gespr\u00e4chspartner muss ausf\u00fchrlich antworten. Beginnt mit: Wer, Was, Wie, Wo, Warum. Ideal in der Bedarfsermittlung.'},
+  {t:'Geschlossene Frage', d:'Fragetechnik mit eindeutiger Antwort: Ja oder Nein. Gut f\u00fcr Best\u00e4tigungen und den Abschluss. Zu viele davon wirken wie ein Verh\u00f6r.'},
+  {t:'Alternativfrage', d:'Der Gespr\u00e4chspartner w\u00e4hlt zwischen zwei Optionen \u2014 beide f\u00fchren zum Ziel des Verk\u00e4ufers. Vermeidet ein klares \u201eNein\u201c. Ideal bei Terminvereinbarung oder Abschluss.'},
+  {t:'Suggestivfrage', d:'Die Antwort wird durch die Art der Fragestellung beeinflusst. Lenkt den Gespr\u00e4chspartner in eine bestimmte Richtung. Einsatz mit Bedacht \u2014 kann manipulativ wirken.'},
+  {t:'Kontrollfrage', d:'Sichert gegenseitiges Verst\u00e4ndnis zwischen Verk\u00e4ufer und Kunde. Verhindert Missverst\u00e4ndnisse. Eingesetzt nach Erl\u00e4uterungen oder der Angebotspr\u00e4sentation.'},
+  {t:'Gegenfrage', d:'Der Gefragte kontert mit einer eigenen Frage, um dem Gespr\u00e4ch eine andere Wendung zu geben. Gibt die Gespr\u00e4chsf\u00fchrung zur\u00fcck. Einsatz in der Einwandbehandlung.'},
+  {t:'Sender-Empf\u00e4nger-Modell', d:'Kommunikationsmodell: Sender kodiert Nachricht \u2192 Kanal \u00fcbertr\u00e4gt \u2192 Empf\u00e4nger dekodiert. R\u00fcckkopplung zeigt, ob die Nachricht ankam. St\u00f6rungen auf jeder Stufe m\u00f6glich.'},
+  {t:'4-Seiten-Modell (Schulz von Thun)', d:'Jede Nachricht hat 4 Seiten gleichzeitig: Sachinhalt (Was?), Selbstoffenbarung (Wer bin ich?), Beziehungsseite (Was halte ich von dir?), Appell (Was soll der Empf\u00e4nger tun?).'},
+  {t:'Sachinhalt (4-Seiten)', d:'Eine der vier Seiten jeder Nachricht. Enth\u00e4lt Fakten, Daten und objektive Informationen. Frage: Was ist der sachliche Inhalt der Aussage?'},
+  {t:'Appell (4-Seiten)', d:'Eine der vier Seiten jeder Nachricht. Was der Sender beim Empf\u00e4nger erreichen m\u00f6chte \u2014 offen oder verdeckt. Frage: Wozu will der Sender den Empf\u00e4nger bewegen?'},
+  {t:'Eisbergmodell', d:'Nur 20 % der Kommunikation sind sichtbar (Sachebene: Fakten, Argumente). 80 % liegen unsichtbar darunter (Beziehungsebene: Gef\u00fchle, Vertrauen, Werte). Kaufentscheidungen werden meist emotional getroffen.'},
+  {t:'Informationsverlusttreppe', d:'Modell, das zeigt, wie Information vom Gedanken (100 %) bis zur Handlung (~10 %) verloren geht. Ursachen: Formulierungsm\u00e4ngel, selektives H\u00f6ren, Missverst\u00e4ndnisse, Vergessen.'}
+  ];
+
+var fi = 0, ff = false;
+
+function fcRender() {
+  document.getElementById('fc-t').textContent = FC[fi].t;
+  document.getElementById('fc-d').textContent = FC[fi].d;
+  document.getElementById('fc-c').textContent = (fi + 1) + ' / ' + FC.length;
+  document.getElementById('fc-card').classList.remove('flipped');
+  ff = false;
+  document.getElementById('fc-prog').innerHTML = FC.map(function(_, i) {
+    var cls = 'fc-pip' + (i < fi ? ' done' : i === fi ? ' active' : '');
+    return '<div class="' + cls + '" onclick="fcGo(' + i + ')"></div>';
+  }).join('');
+}
+
+function fcFlip() { ff = !ff; document.getElementById('fc-card').classList.toggle('flipped', ff); }
+function fcNext() { fi = (fi + 1) % FC.length; fcRender(); }
+function fcPrev() { fi = (fi - 1 + FC.length) % FC.length; fcRender(); }
+function fcGo(i) { fi = i; fcRender(); }
+fcRender();
+
+// ── QUIZ ──
+var QS = [
+  {q:'Welche Slots sollten bei 2 RAM-Riegeln in einem ATX-Mainboard belegt werden?', o:['A1 + B1 (erste Slots)','A2 + B2 (Dual-Channel-Slots)','Egal, alle Kombinationen sind gleich','Nur A1'], a:1, e:'Die meisten Mainboards empfehlen A2 + B2 f\u00fcr Dual-Channel-Betrieb mit 2 Riegeln. Die genaue Empfehlung steht immer im Handbuch des jeweiligen Boards.'},
+  {q:'Was bedeutet "Dual-Channel" beim Arbeitsspeicher?', o:['Doppelte Spannung','Zwei parallele Kan\u00e4le f\u00fcr h\u00f6here Speicherbandbreite','Zwei verschiedene RAM-Typen','Doppelte Taktfrequenz'], a:1, e:'Dual-Channel nutzt zwei parallele Kan\u00e4le. Riegel werden in Slots A2 + B2 eingesetzt.'},
+  {q:'Ein Mainboard hat einen AM5-Sockel. Welche CPU-Familie ist kompatibel?', o:['Intel Core 12. Generation (LGA1700)','AMD Ryzen 7000-Serie (Zen 4)','AMD Ryzen 5000-Serie (AM4)','Alle AMD-CPUs'], a:1, e:'AM5 ist der Sockel f\u00fcr AMD Ryzen 7000-Serie (Zen 4). AM4 (Ryzen 5000) und Intel LGA1700 sind nicht kompatibel \u2014 Sockel m\u00fcssen exakt \u00fcbereinstimmen.'},
+  {q:'Was bedeutet "niedrigeres Timing" beim RAM?', o:['Der RAM ist langsamer','Der RAM ben\u00f6tigt weniger Strom','Weniger Taktzyklen \u2192 geringere Latenz','Die Kapazit\u00e4t ist geringer'], a:2, e:'Niedrigere Timings bedeuten weniger Taktzyklen pro Operation \u2192 geringere Latenz \u2192 schnellerer Zugriff.'},
+  {q:'Wof\u00fcr steht GDDR bei Grafikkarten?', o:['Gigabyte Dynamic Data Rate','Graphics Double Data Rate','General Data Delivery Rate','Graphics Direct Rendering'], a:1, e:'GDDR = Graphics Double Data Rate. Speziell f\u00fcr GPU-Anwendungen optimierter Videospeicher.'},
+  {q:'Wie viel Watt kann ein PCIe-Slot ohne Kabel maximal bereitstellen?', o:['25 W','50 W','75 W','150 W'], a:2, e:'Ein reiner PCIe-Slot kann maximal 75 W liefern.'},
+  {q:'GPU vs. CPU \u2014 Kernanzahl?', o:['CPU hat mehr Kerne','GPU hat mehr Kerne (5000+), CPU weniger (4\u201316)','Beide gleich viele','GPU immer genau 8 Kerne'], a:1, e:'GPUs haben tausende einfache Kerne f\u00fcr Parallelverarbeitung, CPUs wenige aber leistungsf\u00e4hige Kerne.'},
+  {q:'Welche HDD-Gr\u00f6\u00dfe wird haupts\u00e4chlich in Desktop-PCs eingesetzt?', o:['1,8 Zoll','2,5 Zoll','3,5 Zoll','5,25 Zoll'], a:2, e:'3,5-Zoll-Festplatten sind der Standard f\u00fcr Desktop-PCs mit max. ca. 6 TB.'},
+  {q:'Warum wird eine HDD defekt, wenn Luft eindringt?', o:['Elektronik rostet','Staub/Feuchtigkeit zerst\u00f6ren den Luftfilm','Scheiben werden zu schwer','Motor \u00fcberhitzt'], a:1, e:'Der Lese-/Schreibkopf schwebt auf minimalem Luftfilm. Staub ist gr\u00f6\u00dfer als dieser Abstand.'},
+  {q:'Was ist eine QVL-Liste?', o:['Quick Video Link','Qualified Vendor List \u2013 Kompatibilit\u00e4tsliste','Queue Voltage Limiter','Quality Verification Log'], a:1, e:'QVL = Qualified Vendor List. Vom Hersteller getestete und kompatible RAM-Kits.'},
+  {q:'Was bedeutet Rendering?', o:['Audiodaten komprimieren','3D-Daten in 2D-Bilder umwandeln','Netzwerkpakete verarbeiten','Daten auf SSD schreiben'], a:1, e:'Rendering wandelt 3D-Szenen in fertige 2D-Bilder f\u00fcr den Monitor um.'},
+  {q:'Warum sollte das Mainboard als erstes ausgew\u00e4hlt werden?', o:['Es ist die g\u00fcnstigste Komponente','Es bestimmt CPU-Sockel, RAM-Typ und verf\u00fcgbare Slots','Es hat den gr\u00f6\u00dften Einfluss auf die Grafikkarte','Weil es am l\u00e4ngsten liefert'], a:1, e:'Das Mainboard gibt Sockeltyp, RAM-Generation, PCIe-Slots und Anschl\u00fcsse vor. Erst das Board w\u00e4hlen, dann alle anderen Komponenten passend aussuchen.'},
+  {q:'Was versteht man unter Skonto?', o:['Strafzins bei sp\u00e4ter Zahlung','Preisnachlass bei Zahlung innerhalb der Frist','Eine Mehrwertsteuer','Transportkosten'], a:1, e:'Skonto ist ein Preisnachlass (2 %) bei Zahlung binnen 14 Tagen.'},
+  {q:'Welche Schnittstelle ist f\u00fcr HDDs am g\u00e4ngigsten?', o:['USB 3.0','Thunderbolt','SATA (Serial ATA)','IDE / PATA'], a:2, e:'SATA ist die Standardschnittstelle f\u00fcr HDDs. NVMe/PCIe ist der neue Standard f\u00fcr SSDs.'},
+  {q:'Welche Phase folgt nach der Bedarfsermittlung?', o:['Begr\u00fc\u00dfung','Vorbereitung','Angebotspräsentation','Nachbereitung'], a:2, e:'Vorbereitung \u2192 Begr\u00fc\u00dfung \u2192 Bedarfsermittlung \u2192 Angebotspräsentation \u2192 Einwandbehandlung \u2192 Abschluss \u2192 Nachbereitung.'},
+  {q:'Was ergibt sich, wenn U = 12 V und R = 6 \u03a9?', o:['I = 2 A, P = 24 W','I = 72 A, P = 864 W','I = 0,5 A, P = 6 W','I = 18 A, P = 216 W'], a:0, e:'I = U/R = 12/6 = 2 A. P = U\u00b7I = 12\u00b72 = 24 W.'},
+  {q:'Ein Ger\u00e4t hat P = 100 W bei U = 5 V. Wie gro\u00df ist I?', o:['5 A','10 A','20 A','500 A'], a:2, e:'I = P/U = 100 W / 5 V = 20 A.'},
+  {q:'Was beschreibt das Ohmsche Gesetz?', o:['P = U \u00b7 I','U = R \u00b7 I','I = P \u00b7 U','R = P / I'], a:1, e:'Das Ohmsche Gesetz lautet U = R \u00b7 I. Es beschreibt den Zusammenhang zwischen Spannung, Widerstand und Strom.'},
+  {q:'Was ergibt E = P \u00b7 t bei P = 480 W und t = 8 h?', o:['60 kWh','3840 Wh = 3,84 kWh','480 kWh','38,4 Wh'], a:1, e:'E = 480 W \u00b7 8 h = 3840 Wh = 3,84 kWh. Immer zuerst in Wh rechnen, dann durch 1000 teilen.'},
+  {q:'Was kosten 3,84 kWh bei 0,30 \u20ac/kWh?', o:['38,40 \u20ac','0,38 \u20ac','1,15 \u20ac','3,84 \u20ac'], a:2, e:'K = 3,84 kWh \u00b7 0,30 \u20ac/kWh = 1,152 \u20ac \u2248 1,15 \u20ac. Die Formel lautet: Kosten = Energie \u00d7 Strompreis.'},
+  {q:'Wie viele Stunden hat ein Jahr?', o:['8000 h','8760 h','9000 h','7300 h'], a:1, e:'365 Tage \u00d7 24 h = 8760 h/Jahr. Wichtiger Basiswert f\u00fcr Jahresverbrauchsberechnungen.'},
+  {q:'Eine SSD verbraucht 3 W, eine HDD 10 W \u2014 wieviel kWh spart die SSD pro Jahr bei 2000 Betriebsstunden?', o:['7 kWh','14 kWh','20 kWh','6 kWh'], a:1, e:'\u0394P = 10 \u2212 3 = 7 W. \u0394E = 7 W \u00d7 2000 h = 14.000 Wh = 14 kWh/Jahr.'},
+  {q:'Welche Aufgabe hat ein Netzteil?', o:['CPU-Leistung erh\u00f6hen','Netzspannung AC in Gleichspannung DC umwandeln','Daten zwischen Komponenten \u00fcbertragen','RAM-Takt steuern'], a:1, e:'Das Netzteil wandelt Wechselstrom (230 V AC) aus der Steckdose in verschiedene Gleichspannungen (12 V, 5 V, 3,3 V DC) f\u00fcr PC-Komponenten um.'},
+  {q:'Was bedeutet der Wirkungsgrad \u03b7 = 90 % bei einem Netzteil?', o:['90 % der W\u00e4rme wird abgef\u00fchrt','90 % der Eingangsleistung werden als Nutzleistung abgegeben','10 % der Komponenten sind aktiv','Das Netzteil hat 90 W Verlust'], a:1, e:'\u03b7 = P\u2090\u1D64\u209b / P\u2091\u1D62\u2099 \u00d7 100 %. Bei 90 % Wirkungsgrad gehen 10 % als W\u00e4rme verloren.'},
+  {q:'Was schaltet OVP ab?', o:['Zu hohe Temperatur','Zu hohe Ausgangsspannung','Kurzschluss','Zu hohen Strom'], a:1, e:'OVP = Over Voltage Protection. Schaltet bei \u00fcberh\u00f6hter Ausgangsspannung ab und sch\u00fctzt CPU, GPU und Mainboard vor Defekten.'},
+  {q:'Welche Spannung versorgt CPU und GPU im PC?', o:['+3,3 V','+5 V','+12 V','\u22125 V'], a:2, e:'+12 V ist die Hauptspannung f\u00fcr CPU und GPU (die gr\u00f6\u00dften Verbraucher). +5 V versorgt USB, +3,3 V die Mainboard-Logik.'},
+  {q:'Was beschreibt TDP bei einer CPU?', o:['Maximale Taktfrequenz','Typische W\u00e4rmeabgabe unter Last','RAM-Kompatibilit\u00e4t','Anzahl der PCIe-Lanes'], a:1, e:'TDP = Thermal Design Power. Gibt die typische W\u00e4rmeentwicklung an und bestimmt die Mindestanforderungen an das K\u00fchlsystem.'},
+  {q:'Was bedeutet Suffix \u201eK\u201c bei einem Intel-Prozessor (z.B. i9-12900K)?', o:['Kein iGPU','Energieeffizient','Freigegebener Multiplikator f\u00fcr \u00dcbertaktung','Server-Version'], a:2, e:'K = freigegebener Multiplikator \u2014 die CPU kann \u00fcber den Standardtakt hinaus \u00fcbertaktet werden. T = energieeffizient, F = ohne iGPU.'},
+  {q:'Welcher Cache-Level ist am schnellsten und kleinsten?', o:['L3','L2','L1','RAM-Cache'], a:2, e:'L1-Cache ist direkt am Kern, ~3 ns Zugriffszeit und 16\u2013128 KB gro\u00df. Je n\u00e4her am Kern, desto schneller aber kleiner.'},
+  {q:'Warum muss das Mainboard zuerst gew\u00e4hlt werden?', o:['Es ist am teuersten','Es bestimmt Sockel, RAM-Typ und verf\u00fcgbare Slots','Es hat den h\u00f6chsten Einfluss auf Spieleleistung','Weil CPU-Hersteller das verlangen'], a:1, e:'Das Mainboard gibt Sockeltyp (CPU-Kompatibilit\u00e4t), RAM-Generation, PCIe-Slots und Anschl\u00fcsse vor. Erst das Board w\u00e4hlen, dann passende Komponenten.'},
+  {q:'Welcher Stecker versorgt das Mainboard mit Strom vom Netzteil?', o:['8-Pin EPS','6-Pin PCIe','24-Pin ATX','SATA-Stecker'], a:2, e:'Der 24-Pin ATX-Stecker ist die Hauptstromversorgung des Mainboards. Zus\u00e4tzlich wird der 8-Pin EPS-Stecker f\u00fcr die CPU ben\u00f6tigt.'},
+  {q:'Was bedeutet es, wenn beim Boot die DRAM-Diagnose-LED dauerhaft leuchtet?', o:['CPU wird nicht erkannt','RAM-Problem \u2014 Modul fehlt, falsch eingebaut oder inkompatibel','GPU defekt','Netzteil liefert zu wenig Strom'], a:1, e:'Die gelbe DRAM-LED zeigt ein Problem mit dem Arbeitsspeicher an. M\u00f6gliche Ursachen: Riegel in falschem Slot, inkompatibles RAM, schlechter Kontakt oder defektes Modul.'},
+  {q:'Welchen Vorteil bietet ein M.2-Slot mit PCIe 5.0 gegen\u00fcber PCIe 4.0?', o:['Weniger Stromverbrauch','Doppelte maximale Bandbreite (~14 GB/s statt ~7 GB/s)','L\u00e4ngere Lebensdauer der SSD','Kleineres Formfaktor-Design'], a:1, e:'PCIe 5.0 x4 bietet bis zu ~14 GB/s, PCIe 4.0 x4 bis zu ~7 GB/s. Aktuelle High-End-SSDs nutzen PCIe 5.0 aus, Standard-SSDs arbeiten auch mit PCIe 4.0.'},
+  {q:'Welche Fragetechnik liefert die meisten Informationen im Verkaufsgespr\u00e4ch?', o:['Geschlossene Frage','Alternativfrage','Offene Frage','Kontrollfrage'], a:2, e:'Die offene Frage (Wer, Was, Wie, Wo, Warum) l\u00e4sst den Gespr\u00e4chspartner frei antworten und liefert damit die meisten Informationen. Ideal in der Bedarfsermittlung.'},
+  {q:'Wof\u00fcr eignet sich die Alternativfrage im Verkauf besonders?', o:['Ausf\u00fchrliche Bedarfsermittlung','Terminvereinbarung oder Abschluss ohne echtes Nein','Kontrolle des Gespr\u00e4chsverlaufs','Einwandbehandlung durch Gegenfrage'], a:1, e:'Die Alternativfrage bietet zwei Optionen an, die beide zum Verk\u00e4uferziel f\u00fchren \u2014 z.B. \u201eMittwoch oder Donnerstag?\u201c. Der Kunde w\u00e4hlt, aber ein \u201eNein\u201c wird vermieden.'},
+  {q:'Was kennzeichnet eine Suggestivfrage?', o:['Sie fordert eine eindeutige Ja-/Nein-Antwort','Sie beeinflusst die Antwort durch die Art der Fragestellung','Sie gibt dem Kunden zwei Optionen','Sie dient der Informationssammlung'], a:1, e:'Die Suggestivfrage lenkt den Gespr\u00e4chspartner durch ihre Formulierung in eine bestimmte Richtung. Sie kann als manipulativ wahrgenommen werden und sollte gezielt eingesetzt werden.'},
+  {q:'Was ist das Ziel einer Gegenfrage im Verkaufsgespr\u00e4ch?', o:['Informationen sammeln','Einwand best\u00e4tigen','Gespr\u00e4chsf\u00fchrung zur\u00fcckgewinnen oder Wendung erzeugen','Abschluss herbeif\u00fchren'], a:2, e:'Mit der Gegenfrage kontert der Verk\u00e4ufer die Frage des Kunden mit einer eigenen Frage. Dadurch wird die Gespr\u00e4chsf\u00fchrung zur\u00fcckgewonnen \u2014 typisch in der Einwandbehandlung.'},
+  {q:'Welche vier Seiten hat jede Nachricht laut Schulz von Thun?', o:['Sender, Empf\u00e4nger, Kanal, R\u00fcckkopplung','Sachinhalt, Selbstoffenbarung, Beziehungsseite, Appell','Verbal, nonverbal, paraverbal, schriftlich','Inhalt, Form, Ton, Absicht'], a:1, e:'Das 4-Seiten-Modell: Sachinhalt (Was?), Selbstoffenbarung (Wer bin ich?), Beziehungsseite (Was halte ich von dir?), Appell (Was soll der Empf\u00e4nger tun?).'},
+  {q:'Was beschreibt die Beziehungsseite im 4-Seiten-Modell?', o:['Den sachlichen Inhalt einer Aussage','Was der Sender \u00fcber sich selbst verr\u00e4t','Wie der Sender den Empf\u00e4nger sieht und behandelt','Was der Sender vom Empf\u00e4nger erwartet'], a:2, e:'Die Beziehungsseite dr\u00fcckt aus, was der Sender vom Empf\u00e4nger h\u00e4lt und wie er ihr Verh\u00e4ltnis sieht. Sie wird oft nonverbal \u00fcbermittelt und kann Konflikte ausl\u00f6sen.'},
+  {q:'Was sagt das Eisbergmodell \u00fcber Kaufentscheidungen aus?', o:['Entscheidungen werden rein rational getroffen','80 % der Entscheidungsebene ist unsichtbar (Gef\u00fchle, Vertrauen)','Nur Fakten und Preise sind entscheidend','Der Sachinhalt \u00fcberwiegt immer'], a:1, e:'Das Eisbergmodell: Nur 20 % sind sichtbar (Fakten). 80 % liegen unter der Oberfl\u00e4che (Gef\u00fchle, Sympathie, Vertrauen). Kaufentscheidungen werden meist emotional getroffen und nachtr\u00e4glich begr\u00fcndet.'},
+  {q:'Auf welchen Anteil etwa reduziert sich Information bis zur tats\u00e4chlichen Handlung (Informationsverlusttreppe)?', o:['~50 %','~30 %','~10 %','~1 %'], a:2, e:'Laut Informationsverlusttreppe gehen vom urspr\u00fcnglichen Gedanken (100 %) bis zur Handlung des Empf\u00e4ngers ca. 90 % verloren. Am Ende bleiben nur etwa 10 % \u00fcbrig.'},
+  {q:'Welche St\u00f6rungsquelle liegt zwischen \u201eWas jemand sagt\u201c und \u201eWas der andere h\u00f6rt\u201c?', o:['Kodierungsfehler des Senders','Vergessen im Langzeitged\u00e4chtnis','Kanalrauschen, Ablenkung, selektives H\u00f6ren','Fehlende Motivation des Empf\u00e4ngers'], a:2, e:'Zwischen dem Gesagten und dem Geh\u00f6rten entstehen Verluste durch Kanalrauschen (Lärm, Verbindungsqualit\u00e4t), Ablenkung und selektives H\u00f6ren (wir nehmen nur wahr, was uns interessiert).'}
+];
+
+var qi = 0, sc = 0, ans = false;
+
+function initQuiz() {
+  qi = 0; sc = 0; ans = false;
+  document.getElementById('qcontent').style.display = 'block';
+  document.getElementById('qresult').classList.remove('show');
+  renderBar();
+  renderQ();
+}
+
+function renderBar() {
+  document.getElementById('qbar').innerHTML = QS.map(function(_, i) {
+    var cls = 'qseg' + (i < qi ? ' done' : i === qi ? ' cur' : '');
+    return '<div class="' + cls + '"></div>';
+  }).join('');
+}
+
+function renderQ() {
+  var q = QS[qi];
+  document.getElementById('qnum').textContent = 'Frage ' + (qi + 1) + ' / ' + QS.length;
+  document.getElementById('qtext').textContent = q.q;
+  var K = ['A', 'B', 'C', 'D'];
+  document.getElementById('qopts').innerHTML = q.o.map(function(o, i) {
+    return '<button class="qopt" onclick="pick(' + i + ')"><span class="okey">' + K[i] + '</span>' + o + '</button>';
+  }).join('');
+  document.getElementById('qfb').className = 'qfb';
+  document.getElementById('qfb').textContent = '';
+  document.getElementById('qnext').className = 'btn-next';
+  ans = false;
+}
+
+function pick(idx) {
+  if (ans) return;
+  ans = true;
+  var q = QS[qi];
+  document.querySelectorAll('.qopt').forEach(function(el, i) {
+    el.classList.add('disabled');
+    if (i === q.a) el.classList.add('correct');
+    else if (i === idx) el.classList.add('wrong');
+  });
+  var fb = document.getElementById('qfb');
+  if (idx === q.a) { sc++; fb.className = 'qfb correct show'; fb.textContent = '\u2713 Richtig. ' + q.e; }
+  else { fb.className = 'qfb wrong show'; fb.textContent = '\u2717 Falsch. ' + q.e; }
+  var nb = document.getElementById('qnext');
+  nb.className = 'btn-next show';
+  nb.textContent = qi === QS.length - 1 ? 'Ergebnis anzeigen \u2192' : 'N\u00e4chste Frage \u2192';
+}
+
+function nextQ() {
+  qi++;
+  renderBar();
+  if (qi >= QS.length) {
+    document.getElementById('qcontent').style.display = 'none';
+    var r = document.getElementById('qresult');
+    r.classList.add('show');
+    document.getElementById('rscore').textContent = sc + ' / ' + QS.length;
+    var p = sc / QS.length;
+    var msg = p >= 0.9 ? 'Sehr gut. Du beherrschst den Stoff sicher.' :
+              p >= 0.7 ? 'Gut. Noch einzelne L\u00fccken \u2013 Flashcards helfen weiter.' :
+              p >= 0.5 ? 'Solide Basis. Lernzettel nochmals durcharbeiten.' :
+                         'Stoff noch nicht sicher. Beginne mit den Lernzetteln.';
+    document.getElementById('rmsg').textContent = msg;
+  } else {
+    renderQ();
+  }
+}
+
+initQuiz();
+</script>
+</body>
+</html>
